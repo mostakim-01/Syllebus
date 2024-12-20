@@ -5,24 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Syllabus Tracker</title>
   <style>
+    :root {
+      --bg-color: #f4f4f4;
+      --text-color: #333;
+      --card-bg: #fff;
+      --button-bg: #2575fc;
+      --button-hover-bg: #6a11cb;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1e1e1e;
+      --text-color: #f4f4f4;
+      --card-bg: #2a2a2a;
+      --button-bg: #4a90e2;
+      --button-hover-bg: #6b56d0;
+    }
     body {
       font-family: 'Arial', sans-serif;
       padding: 20px;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      color: #fff;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
     }
     h1 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 2.5em;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     }
-    form, .add-section {
-      background: rgba(255, 255, 255, 0.2);
+    form, .add-section, .settings {
+      background: var(--card-bg);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+      transition: background 0.3s;
     }
     input, select, button {
       padding: 10px;
@@ -33,32 +48,34 @@
     }
     input, select {
       flex: 1;
-      background: rgba(255, 255, 255, 0.8);
-      color: #333;
+      background: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid #ccc;
+      transition: background 0.3s, color 0.3s;
     }
     button {
-      background: #2575fc;
+      background: var(--button-bg);
       color: #fff;
       cursor: pointer;
       transition: background 0.3s;
     }
     button:hover {
-      background: #6a11cb;
+      background: var(--button-hover-bg);
     }
     ul {
       list-style-type: none;
       padding: 0;
     }
     li {
-      background: rgba(255, 255, 255, 0.8);
+      background: var(--card-bg);
       margin: 10px 0;
       padding: 15px;
       border-radius: 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #333;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s;
     }
     .delete-btn {
       background-color: red;
@@ -72,13 +89,25 @@
     .delete-btn:hover {
       background-color: darkred;
     }
-    .add-section h3 {
-      margin-bottom: 10px;
+    .settings {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chart {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
     }
   </style>
 </head>
 <body>
   <h1>Syllabus Tracker</h1>
+
+  <div class="settings">
+    <button id="toggle-theme">Toggle Dark Mode</button>
+    <button id="update-topics">Load Topics from PDF</button>
+  </div>
 
   <form id="topic-form">
     <select id="subject-dropdown">
@@ -103,8 +132,11 @@
     <button id="add-subject-btn">Add Subject</button>
   </div>
 
+  <canvas id="progress-chart" class="chart"></canvas>
+
   <ul id="topic-list"></ul>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const topics = JSON.parse(localStorage.getItem('topics')) || [];
     const subjects = JSON.parse(localStorage.getItem('subjects')) || [];
@@ -117,6 +149,12 @@
     const topicList = document.getElementById('topic-list');
     const newSubjectInput = document.getElementById('new-subject-input');
     const addSubjectBtn = document.getElementById('add-subject-btn');
+    const toggleThemeBtn = document.getElementById('toggle-theme');
+    const progressChart = document.getElementById('progress-chart');
+    const updateTopicsBtn = document.getElementById('update-topics');
+
+    let currentTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', currentTheme);
 
     function renderSubjects() {
       subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
@@ -136,6 +174,7 @@
           <button class="delete-btn" onclick="deleteTopic(${index})">Delete</button>`;
         topicList.appendChild(li);
       });
+      updateChart();
     }
 
     function deleteTopic(index) {
@@ -143,6 +182,36 @@
       localStorage.setItem('topics', JSON.stringify(topics));
       renderTopics();
     }
+
+    function updateChart() {
+      const completed = topics.filter(topic => topic.status === 'Complete').length;
+      const incomplete = topics.length - completed;
+
+      new Chart(progressChart, {
+        type: 'doughnut',
+        data: {
+          labels: ['Complete', 'Incomplete'],
+          datasets: [{
+            data: [completed, incomplete],
+            backgroundColor: ['#4caf50', '#f44336'],
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+          },
+        },
+      });
+    }
+
+    toggleThemeBtn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('theme', currentTheme);
+    });
 
     topicForm.addEventListener('submit', e => {
       e.preventDefault();
@@ -169,7 +238,17 @@
       }
     });
 
-    // Initial Render
+    updateTopicsBtn.addEventListener('click', () => {
+      // Simulating loading topics from a PDF file (this would need actual PDF parsing logic)
+      const sampleTopics = [
+        { subject: 'Mathematics', paper: '1st Paper', chapter: 'Algebra', status: 'Incomplete' },
+        { subject: 'Physics', paper: '2nd Paper', chapter: 'Mechanics', status: 'Complete' },
+      ];
+      topics.push(...sampleTopics);
+      localStorage.setItem('topics', JSON.stringify(topics));
+      renderTopics();
+    });
+
     renderSubjects();
     renderTopics();
   </script>
