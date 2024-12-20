@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syllabus Tracker</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form, .add-section {
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #fff;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <h1>Syllabus Tracker</h1>
+
+  <form id="topic-form">
+    <select id="subject-dropdown">
+      <option value="">Select Subject</option>
+    </select>
+    <select id="paper-dropdown">
+      <option value="">Select Paper</option>
+      <option value="1st Paper">1st Paper</option>
+      <option value="2nd Paper">2nd Paper</option>
+    </select>
+    <input type="text" id="chapter-input" placeholder="Enter Chapter">
+    <select id="status-dropdown">
+      <option value="Incomplete">Incomplete</option>
+      <option value="Complete">Complete</option>
+    </select>
+    <button type="submit">Add Topic</button>
+  </form>
+
+  <div class="add-section">
+    <h3>Add New Subject</h3>
+    <input type="text" id="new-subject-input" placeholder="New Subject">
+    <button id="add-subject-btn">Add Subject</button>
+  </div>
+
+  <ul id="topic-list"></ul>
+
+  <script>
+    const topics = JSON.parse(localStorage.getItem('topics')) || [];
+    const subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+
+    const subjectDropdown = document.getElementById('subject-dropdown');
+    const paperDropdown = document.getElementById('paper-dropdown');
+    const chapterInput = document.getElementById('chapter-input');
+    const statusDropdown = document.getElementById('status-dropdown');
+    const topicForm = document.getElementById('topic-form');
+    const topicList = document.getElementById('topic-list');
+    const newSubjectInput = document.getElementById('new-subject-input');
+    const addSubjectBtn = document.getElementById('add-subject-btn');
+
+    function renderSubjects() {
+      subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
+      subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject;
+        option.textContent = subject;
+        subjectDropdown.appendChild(option);
+      });
+    }
+
+    function renderTopics() {
+      topicList.innerHTML = '';
+      topics.forEach((topic, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${topic.subject} (${topic.paper}) - ${topic.chapter} [${topic.status}] 
+          <button class="delete-btn" onclick="deleteTopic(${index})">Delete</button>`;
+        topicList.appendChild(li);
+      });
+    }
+
+    function deleteTopic(index) {
+      topics.splice(index, 1);
+      localStorage.setItem('topics', JSON.stringify(topics));
+      renderTopics();
+    }
+
+    topicForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const subject = subjectDropdown.value;
+      const paper = paperDropdown.value;
+      const chapter = chapterInput.value;
+      const status = statusDropdown.value;
+
+      if (subject && paper && chapter) {
+        topics.push({ subject, paper, chapter, status });
+        localStorage.setItem('topics', JSON.stringify(topics));
+        renderTopics();
+        topicForm.reset();
+      }
+    });
+
+    addSubjectBtn.addEventListener('click', () => {
+      const newSubject = newSubjectInput.value.trim();
+      if (newSubject && !subjects.includes(newSubject)) {
+        subjects.push(newSubject);
+        localStorage.setItem('subjects', JSON.stringify(subjects));
+        renderSubjects();
+        newSubjectInput.value = '';
+      }
+    });
+
+    // Initial Render
+    renderSubjects();
+    renderTopics();
+  </script>
+</body>
+</html>
