@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -106,31 +106,32 @@
 
   <div class="settings">
     <button id="toggle-theme">Toggle Dark Mode</button>
-    <button id="update-topics">Load Topics from PDF</button>
   </div>
 
   <form id="topic-form">
     <select id="subject-dropdown">
-      <option value="">Select Subject</option>
+      <option value="">বিষয় নির্বাচন করুন</option>
+      <option value="পদার্থবিজ্ঞান ১ম পত্র">পদার্থবিজ্ঞান ১ম পত্র</option>
+      <option value="পদার্থবিজ্ঞান ২য় পত্র">পদার্থবিজ্ঞান ২য় পত্র</option>
+      <option value="রসায়ন ১ম পত্র">রসায়ন ১ম পত্র</option>
+      <option value="রসায়ন ২য় পত্র">রসায়ন ২য় পত্র</option>
+      <option value="উচ্চতর গনিত ১ম পত্র">উচ্চতর গনিত ১ম পত্র</option>
+      <option value="উচ্চতর গনিত ২য় পত্র">উচ্চতর গনিত ২য় পত্র</option>
+      <option value="উদ্ভিদবিজ্ঞান">উদ্ভিদবিজ্ঞান</option>
+      <option value="প্রাণিবিজ্ঞান">প্রাণিবিজ্ঞান</option>
     </select>
     <select id="paper-dropdown">
-      <option value="">Select Paper</option>
-      <option value="1st Paper">1st Paper</option>
-      <option value="2nd Paper">2nd Paper</option>
+      <option value="">পত্র নির্বাচন করুন</option>
+      <option value="1st Paper">১ম পত্র</option>
+      <option value="2nd Paper">২য় পত্র</option>
     </select>
-    <input type="text" id="chapter-input" placeholder="Enter Chapter">
+    <input type="text" id="chapter-input" placeholder="অধ্যায় নাম লিখুন">
     <select id="status-dropdown">
-      <option value="Incomplete">Incomplete</option>
-      <option value="Complete">Complete</option>
+      <option value="Incomplete">অসম্পূর্ণ</option>
+      <option value="Complete">সম্পূর্ণ</option>
     </select>
-    <button type="submit">Add Topic</button>
+    <button type="submit">টপিক যোগ করুন</button>
   </form>
-
-  <div class="add-section">
-    <h3>Add New Subject</h3>
-    <input type="text" id="new-subject-input" placeholder="New Subject">
-    <button id="add-subject-btn">Add Subject</button>
-  </div>
 
   <canvas id="progress-chart" class="chart"></canvas>
 
@@ -138,119 +139,121 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const topics = JSON.parse(localStorage.getItem('topics')) || [];
-    const subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+    const topics = JSON.parse(localStorage.getItem('topics')) || [
+      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'নিউটনিয়ান বলবিদ্যা', status: 'সম্পূর্ণ' },
+      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'কাজ,শক্তি ও ক্ষমতা', status: 'অসম্পূর্ণ' },
+      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'মহাকর্ষ ও অভিকর্ষ', status: 'অসম্পূর্ণ' },
+      { subject: 'পদার্থবিজ্ঞান ২য় পত্র', paper: '২য় পত্র', chapter: 'স্থির তড়িৎ', status: 'অসম্পূর্ণ' },
+      { subject: 'পদার্থবিজ্ঞান ২য় পত্র', paper: '২য় পত্র', chapter: 'পরমানুর গঠন', status: 'সম্পূর্ণ' },
+      { subject: 'রসায়ন ১ম পত্র', paper: '১ম পত্র', chapter: 'রাসায়নিক বন্ধন', status: 'সম্পূর্ণ' },
+      { subject: 'রসায়ন ২য় পত্র', paper: '২য় পত্র', chapter: 'পরিবেশ রসায়ন', status: 'অসম্পূর্ণ' },
+      { subject: 'উচ্চতর গনিত ১ম পত্র', paper: '১ম পত্র', chapter: 'ত্রিকোনমিতি', status: 'সম্পূর্ণ' },
+      { subject: 'উচ্চতর গনিত ২য় পত্র', paper: '২য় পত্র', chapter: 'জটিল সংখ্যা', status: 'অসম্পূর্ণ' },
+      { subject: 'উদ্ভিদবিজ্ঞান', paper: '', chapter: 'উদ্ভিদ শারীরতত্ত', status: 'সম্পূর্ণ' },
+      { subject: 'প্রাণিবিজ্ঞান', paper: '', chapter: 'প্রাণীর পরিচিতি', status: 'অসম্পূর্ণ' }
+    ];
 
     const subjectDropdown = document.getElementById('subject-dropdown');
     const paperDropdown = document.getElementById('paper-dropdown');
     const chapterInput = document.getElementById('chapter-input');
     const statusDropdown = document.getElementById('status-dropdown');
-    const topicForm = document.getElementById('topic-form');
     const topicList = document.getElementById('topic-list');
-    const newSubjectInput = document.getElementById('new-subject-input');
-    const addSubjectBtn = document.getElementById('add-subject-btn');
-    const toggleThemeBtn = document.getElementById('toggle-theme');
-    const progressChart = document.getElementById('progress-chart');
-    const updateTopicsBtn = document.getElementById('update-topics');
+    const toggleThemeButton = document.getElementById('toggle-theme');
+    const topicForm = document.getElementById('topic-form');
 
-    let currentTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', currentTheme);
+    // Load subjects into dropdown
+    const subjects = [...new Set(topics.map(topic => topic.subject))];
+    subjects.forEach(subject => {
+      const option = document.createElement('option');
+      option.value = subject;
+      option.textContent = subject;
+      subjectDropdown.appendChild(option);
+    });
 
-    function renderSubjects() {
-      subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
-      subjects.forEach(subject => {
-        const option = document.createElement('option');
-        option.value = subject;
-        option.textContent = subject;
-        subjectDropdown.appendChild(option);
-      });
-    }
-
+    // Render the topic list
     function renderTopics() {
       topicList.innerHTML = '';
       topics.forEach((topic, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `${topic.subject} (${topic.paper}) - ${topic.chapter} [${topic.status}] 
-          <button class="delete-btn" onclick="deleteTopic(${index})">Delete</button>`;
+        li.innerHTML = `
+          <span>${topic.subject} - ${topic.chapter} (${topic.status})</span>
+          <button class="delete-btn" data-index="${index}">মুছে ফেলুন</button>
+        `;
         topicList.appendChild(li);
       });
-      updateChart();
+
+      // Update the graph
+      updateGraph();
     }
 
-    function deleteTopic(index) {
-      topics.splice(index, 1);
-      localStorage.setItem('topics', JSON.stringify(topics));
-      renderTopics();
-    }
+    renderTopics();
 
-    function updateChart() {
-      const completed = topics.filter(topic => topic.status === 'Complete').length;
-      const incomplete = topics.length - completed;
+    // Handle adding new topics
+    topicForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const subject = subjectDropdown.value;
+      const paper = paperDropdown.value;
+      const chapter = chapterInput.value.trim();
+      const status = statusDropdown.value;
 
-      new Chart(progressChart, {
-        type: 'doughnut',
+      if (subject && paper && chapter && status) {
+        topics.push({ subject, paper, chapter, status });
+        localStorage.setItem('topics', JSON.stringify(topics));
+        renderTopics();
+        chapterInput.value = '';
+      }
+    });
+
+    // Handle theme toggle
+    toggleThemeButton.addEventListener('click', () => {
+      document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
+    });
+
+    // Handle deleting topics
+    topicList.addEventListener('click', event => {
+      if (event.target.classList.contains('delete-btn')) {
+        const index = event.target.dataset.index;
+        topics.splice(index, 1);
+        localStorage.setItem('topics', JSON.stringify(topics));
+        renderTopics();
+      }
+    });
+
+    // Update the graph based on completed/incomplete topics
+    function updateGraph() {
+      const completed = topics.filter(topic => topic.status === 'সম্পূর্ণ').length;
+      const total = topics.length;
+
+      const ctx = document.getElementById('progress-chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
         data: {
-          labels: ['Complete', 'Incomplete'],
+          labels: ['সম্পূর্ণ', 'অসম্পূর্ণ'],
           datasets: [{
-            data: [completed, incomplete],
+            data: [completed, total - completed],
             backgroundColor: ['#4caf50', '#f44336'],
-          }],
+            borderColor: ['#ffffff', '#ffffff'],
+            borderWidth: 2
+          }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',
+              position: 'top',
             },
-          },
-        },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  const percentage = ((tooltipItem.raw / total) * 100).toFixed(2);
+                  return `${tooltipItem.label}: ${percentage}%`;
+                }
+              }
+            }
+          }
+        }
       });
     }
-
-    toggleThemeBtn.addEventListener('click', () => {
-      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.body.setAttribute('data-theme', currentTheme);
-      localStorage.setItem('theme', currentTheme);
-    });
-
-    topicForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const subject = subjectDropdown.value;
-      const paper = paperDropdown.value;
-      const chapter = chapterInput.value;
-      const status = statusDropdown.value;
-
-      if (subject && paper && chapter) {
-        topics.push({ subject, paper, chapter, status });
-        localStorage.setItem('topics', JSON.stringify(topics));
-        renderTopics();
-        topicForm.reset();
-      }
-    });
-
-    addSubjectBtn.addEventListener('click', () => {
-      const newSubject = newSubjectInput.value.trim();
-      if (newSubject && !subjects.includes(newSubject)) {
-        subjects.push(newSubject);
-        localStorage.setItem('subjects', JSON.stringify(subjects));
-        renderSubjects();
-        newSubjectInput.value = '';
-      }
-    });
-
-    updateTopicsBtn.addEventListener('click', () => {
-      // Simulating loading topics from a PDF file (this would need actual PDF parsing logic)
-      const sampleTopics = [
-        { subject: 'Mathematics', paper: '1st Paper', chapter: 'Algebra', status: 'Incomplete' },
-        { subject: 'Physics', paper: '2nd Paper', chapter: 'Mechanics', status: 'Complete' },
-      ];
-      topics.push(...sampleTopics);
-      localStorage.setItem('topics', JSON.stringify(topics));
-      renderTopics();
-    });
-
-    renderSubjects();
-    renderTopics();
   </script>
 </body>
 </html>
