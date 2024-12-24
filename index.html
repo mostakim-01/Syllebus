@@ -261,15 +261,15 @@
             const row = document.createElement('tr');
             const rowClass = task.status === "Complete" ? "completed" : "";
             row.innerHTML = `
-                <td contenteditable="false" class="${rowClass}">${task.subject}</td>
-                <td contenteditable="false" class="${rowClass}">${task.chapter}</td>
-                <td contenteditable="false" class="${rowClass}">${task.data}</td>
-                <td class="status-${task.status.toLowerCase()} ${rowClass}">${task.status}</td>
+                <td contenteditable="false" class="${rowClass}" id="subject-${index}">${task.subject}</td>
+                <td contenteditable="false" class="${rowClass}" id="chapter-${index}">${task.chapter}</td>
+                <td contenteditable="false" class="${rowClass}" id="data-${index}">${task.data}</td>
+                <td class="status-${task.status.toLowerCase()} ${rowClass}" id="status-${index}">${task.status}</td>
                 <td class="actions-column">
                     <button class="edit-btn" onclick="editTask(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
                     <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Status</button>
-                    <button class="save-btn hidden" onclick="saveTask(${index})">Save</button>
+                    <button class="save-btn hidden" id="save-btn-${index}" onclick="saveTask(${index})">Save</button>
                 </td>
             `;
             taskBody.appendChild(row);
@@ -309,7 +309,7 @@
         document.getElementById('chapter').value = task.chapter;
         document.getElementById('data').value = task.data;
 
-        const saveBtn = document.querySelectorAll('.save-btn')[index];
+        const saveBtn = document.getElementById(`save-btn-${index}`);
         saveBtn.classList.remove('hidden');
     }
 
