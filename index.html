@@ -158,6 +158,49 @@
             text-decoration: line-through;
             color: gray;
         }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -198,6 +241,13 @@
         </table>
     </div>
 
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
     <script>
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
@@ -207,6 +257,17 @@
         const noTasksMessage = document.getElementById('no-tasks-message');
         const taskList = document.getElementById('task-list');
         const taskSummary = document.getElementById('task-summary');
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
 
         function askUserName() {
             let username = localStorage.getItem('username');
@@ -283,7 +344,7 @@
             tasks.splice(index, 1);
             saveTasksToLocalStorage();
             showTasks();
-            alert('Task deleted successfully!');
+            showModal('Task deleted successfully!');
         }
 
         document.getElementById('toggle-form').addEventListener('click', () => {
@@ -296,14 +357,14 @@
             const details = document.getElementById('details').value.trim();
 
             if (!subject || !chapter || !details) {
-                alert('Please fill in all fields!');
+                showModal('Please fill in all fields!');
                 return;
             }
 
             tasks.unshift({ subject, chapter, details, status: 'Remaining' });
             saveTasksToLocalStorage();
             showTasks();
-            alert('Task added successfully!');
+            showModal('Task added successfully!');
             taskForm.style.display = 'none';
             document.getElementById('subject').value = '';
             document.getElementById('chapter').value = '';
