@@ -206,7 +206,10 @@
 <body>
     <header>
         <h1>সিলেবাস</h1>
-        <div id="user-name" class="user-welcome"></div>
+        <div id="user-name" class="user-welcome">
+            <input type="text" id="user-input" placeholder="Enter your name" style="padding: 10px; border-radius: 20px; border: 2px solid #007bff; font-size: 16px;">
+            <button onclick="saveUserName()" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-size: 16px;">Save</button>
+        </div>
     </header>
 
     <div class="container">
@@ -259,6 +262,7 @@
         const taskSummary = document.getElementById('task-summary');
         const modal = document.getElementById('modal');
         const modalMessage = document.getElementById('modal-message');
+        const userInput = document.getElementById('user-input');
 
         function showModal(message) {
             modalMessage.textContent = message;
@@ -269,25 +273,27 @@
             modal.classList.remove('active');
         }
 
-        function askUserName() {
-            let username = localStorage.getItem('username');
-            if (!username) {
-                setTimeout(() => {
-                    username = prompt("What is your name?");
-                    if (username) {
-                        localStorage.setItem('username', username);
-                    } else {
-                        username = "User";
-                    }
-                    userNameElement.textContent = `Welcome, ${username}`;
-                }, 500);
-            } else {
+        function saveUserName() {
+            const username = userInput.value.trim();
+            if (username) {
+                localStorage.setItem('username', username);
                 userNameElement.textContent = `Welcome, ${username}`;
+                userInput.value = ''; // Clear the input field
+            } else {
+                showModal('Please enter a valid name!');
             }
         }
 
         window.onload = () => {
-            askUserName();
+            const username = localStorage.getItem('username');
+            if (username) {
+                userNameElement.textContent = `Welcome, ${username}`;
+            } else {
+                userNameElement.innerHTML = `
+                    <input type="text" id="user-input" placeholder="Enter your name" style="padding: 10px; border-radius: 20px; border: 2px solid #007bff; font-size: 16px;">
+                    <button onclick="saveUserName()" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-size: 16px;">Save</button>
+                `;
+            }
         };
 
         function saveTasksToLocalStorage() {
