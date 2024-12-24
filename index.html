@@ -52,6 +52,7 @@
             backdrop-filter: blur(10px);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center; /* Center content inside container */
         }
 
         /* Task Form */
@@ -62,7 +63,7 @@
             margin-bottom: 20px;
             opacity: 0;
             transform: translateY(-20px);
-            transition: all 0.3s ease-in-out;
+            transition: opacity 0.3s ease, transform 0.3s ease;
             visibility: hidden;
             height: 0;
         }
@@ -97,14 +98,13 @@
         /* Table Styles */
         table {
             width: 100%;
+            max-width: 1000px; /* Set max width to limit size */
+            margin: 20px auto;
             border-collapse: collapse;
-            margin-top: 20px;
             overflow-x: auto;
             display: block;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-left: auto;
-            margin-right: auto;
         }
         th, td {
             padding: 15px;
@@ -188,116 +188,88 @@
     <!-- Task Form -->
     <div class="task-form hidden" id="task-form">
         <h2>Add New Task</h2>
-        <input type="text" id="subject" placeholder="Subject" required>
-        <input type="text" id="chapter" placeholder="Chapter Details" required>
-        <input type="text" id="data" placeholder="Additional Data" required>
-        <button id="add-task">Add Task</button>
+        <input type="text" id="subject" placeholder="Subject" />
+        <input type="text" id="chapter" placeholder="Chapter" />
+        <textarea id="details" placeholder="Chapter Details"></textarea>
+        <button id="save-task">Save Task</button>
     </div>
 
-    <!-- Task Table -->
+    <!-- Tasks Table -->
     <table id="task-table">
         <thead>
             <tr>
                 <th>Subject</th>
+                <th>Chapter</th>
                 <th>Chapter Details</th>
-                <th>Additional Data</th>
                 <th>Status</th>
-                <th class="actions-column">Actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="task-body">
-            <!-- Tasks will be dynamically populated here -->
-        </tbody>
+        <tbody id="task-list"></tbody>
     </table>
 </div>
 
 <script>
-    // Default JSON data (your previous tasks)
-    const initialData = [
-        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "স্থির তড়িৎ", data: "যারক", status: "Remaining" },
-        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান", data: "Running", status: "Remaining" },
-        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "সেমিকন্ডাক্টর ও ইলেকট্রনিক্স", data: "CO-MCQ", status: "Complete" },
-        { subject: "রসায়ন ২য় পত্র", chapter: "পরিবেশ রসায়ন", data: "মতবাদ এক বিক্রিয়া", status: "Complete" },
-        { subject: "রসায়ন ২য় পত্র", chapter: "জৈব রসায়ন", data: "Running", status: "Remaining" },
-        { subject: "রসায়ন ২য় পত্র", chapter: "পরিমাণগত রসায়ন", data: "CO-MCQ", status: "Complete" },
-        { subject: "উচ্চতর গণিত ২য় পত্র", chapter: "স্থিতি বিদ্যা", data: "সম্পূর্ণ", status: "Complete" },
-        { subject: "উচ্চতর গণিত ২য় পত্র", chapter: "সমতলে বস্তুর গতিবিধি", data: "সম্পূর্ণ", status: "Complete" },
-        { subject: "প্রাণিবিজ্ঞান", chapter: "চলন ও অঙ্গ চালনা", data: "Running", status: "Remaining" },
-        { subject: "প্রাণিবিজ্ঞান", chapter: "জিনতত্ত্ব ও বিবর্তন", data: "Running", status: "Remaining" }
-    ];
-
-    // Load tasks from localStorage
+    // Helper functions to load and save tasks to local storage
     function loadTasks() {
-        const allTasks = localStorage.getItem('allTasks') ? JSON.parse(localStorage.getItem('allTasks')) : initialData;
-        return allTasks;
+        const tasks = localStorage.getItem('tasks');
+        return tasks ? JSON.parse(tasks) : [];
     }
 
-    // Save tasks to localStorage
-    function saveTasks(allTasks) {
-        localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    function saveTasks(tasks) {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     // Show tasks in table
     function showTasks() {
-        const allTasks = loadTasks();
-        const taskBody = document.getElementById('task-body');
-        taskBody.innerHTML = '';
+        const tasks = loadTasks();
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = '';
 
-        allTasks.forEach((task, index) => {
+        tasks.forEach((task, index) => {
             const row = document.createElement('tr');
-            const rowClass = task.status === "Complete" ? "completed" : "";
             row.innerHTML = `
-                <td class="${rowClass}" id="subject-${index}">${task.subject}</td>
-                <td class="${rowClass}" id="chapter-${index}">${task.chapter}</td>
-                <td class="${rowClass}" id="data-${index}">${task.data}</td>
-                <td class="status-${task.status.toLowerCase()} ${rowClass}" id="status-${index}">${task.status}</td>
-                <td class="actions-column">
+                <td>${task.subject}</td>
+                <td>${task.chapter}</td>
+                <td>${task.details}</td>
+                <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.status}</td>
+                <td>
+                    <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                    <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Status</button>
                 </td>
             `;
-            taskBody.appendChild(row);
+            taskList.appendChild(row);
         });
     }
 
     // Add new task
-    document.getElementById('add-task').addEventListener('click', function() {
+    document.getElementById('save-task').addEventListener('click', function() {
         const subject = document.getElementById('subject').value;
         const chapter = document.getElementById('chapter').value;
-        const data = document.getElementById('data').value;
+        const details = document.getElementById('details').value;
 
-        if (subject && chapter && data) {
-            const newTask = {
-                subject,
-                chapter,
-                data,
-                status: "Remaining"
-            };
-
-            const allTasks = loadTasks();
-            allTasks.push(newTask);
-            saveTasks(allTasks);
-            document.getElementById('subject').value = '';
-            document.getElementById('chapter').value = '';
-            document.getElementById('data').value = '';
+        if (subject && chapter && details) {
+            const tasks = loadTasks();
+            tasks.push({ subject, chapter, details, status: 'Remaining' });
+            saveTasks(tasks);
             showTasks();
+            document.getElementById('task-form').classList.remove('show');
         }
     });
 
     // Toggle task completion status
     function toggleTask(index) {
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-        task.status = task.status === "Complete" ? "Remaining" : "Complete";
-        saveTasks(allTasks);
+        const tasks = loadTasks();
+        tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
+        saveTasks(tasks);
         showTasks();
     }
 
     // Delete task
     function deleteTask(index) {
-        const allTasks = loadTasks();
-        allTasks.splice(index, 1);
-        saveTasks(allTasks);
+        const tasks = loadTasks();
+        tasks.splice(index, 1);
+        saveTasks(tasks);
         showTasks();
     }
 
