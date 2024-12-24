@@ -276,39 +276,86 @@
         });
     }
 
-    // Toggle task status
-    function toggleTask(index) {
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-        task.status = task.status === 'Remaining' ? 'Complete' : 'Remaining';
+    // Add new task
+    document.getElementById('add-task').addEventListener('click', function() {
+        const subject = document.getElementById('subject').value;
+        const chapter = document.getElementById('chapter').value;
+        const data = document.getElementById('data').value;
 
-        saveTasks(allTasks);
-        showTasks();
-    }
+        if (subject && chapter && data) {
+            const newTask = {
+                subject,
+                chapter,
+                data,
+                status: "Remaining"
+            };
+
+            const allTasks = loadTasks();
+            allTasks.push(newTask);
+            saveTasks(allTasks);
+            document.getElementById('subject').value = '';
+            document.getElementById('chapter').value = '';
+            document.getElementById('data').value = '';
+            showTasks();
+            toggleForm(); // Hide form after adding
+        }
+    });
 
     // Edit task
     function editTask(index) {
         const allTasks = loadTasks();
         const task = allTasks[index];
-
-        // Fill form with task details
         document.getElementById('subject').value = task.subject;
         document.getElementById('chapter').value = task.chapter;
         document.getElementById('data').value = task.data;
 
-        // Change button to Save
         const saveBtn = document.querySelectorAll('.save-btn')[index];
+        saveBtn.classList.remove('hidden');
     }
 
-    // Toggle the form visibility with transition effect
-    document.getElementById('toggle-form').addEventListener('click', function() {
+    // Save edited task
+    function saveTask(index) {
+        const allTasks = loadTasks();
+        allTasks[index] = {
+            subject: document.getElementById('subject').value,
+            chapter: document.getElementById('chapter').value,
+            data: document.getElementById('data').value,
+            status: "Remaining"
+        };
+        saveTasks(allTasks);
+        showTasks();
+    }
+
+    // Delete task
+    function deleteTask(index) {
+        const allTasks = loadTasks();
+        allTasks.splice(index, 1);
+        saveTasks(allTasks);
+        showTasks();
+    }
+
+    // Toggle task status
+    function toggleTask(index) {
+        const allTasks = loadTasks();
+        const task = allTasks[index];
+        task.status = task.status === "Complete" ? "Remaining" : "Complete";
+        saveTasks(allTasks);
+        showTasks();
+    }
+
+    // Toggle task form visibility
+    function toggleForm() {
         const form = document.getElementById('task-form');
         form.classList.toggle('show');
         form.classList.toggle('hidden');
-    });
+    }
 
-    // Initialize tasks on page load
+    // Initially show tasks
     showTasks();
+
+    // Add event listener for adding task
+    document.getElementById('toggle-form').addEventListener('click', toggleForm);
+
 </script>
 
 </body>
