@@ -6,233 +6,290 @@
     <title>Task List</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            color: #333; /* Text color */
         }
         header {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
+            background-color: #007bff; /* Blue background */
+            color: white; /* White text */
+            padding: 15px;
             text-align: center;
         }
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
+            max-width: 1000px;
+            margin: 30px auto;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .task-form input, .task-form button {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #007bff;
+            font-size: 16px;
+        }
+        .task-form button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .task-form input {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #333; /* Darker text for inputs */
+        }
+        .task-form button:hover {
+            background-color: #0056b3;
+        }
+            /* Navbar Style */
+    .navbar {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    .navbar button {
+        padding: 10px 20px;
+        border: 2px solid #007bff;
+        background: rgba(255, 255, 255, 0.1);
+        color: #007bff; /* Default blue text */
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease; /* Smooth transition */
+    }
+    .navbar button:hover {
+        background-color: #007bff; /* Blue background on hover */
+        color: white; /* White text on hover */
+    }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
+            margin-top: 20px;
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
+            border: 2px solid #ddd;
+            border-radius: 8px;
         }
         th {
             background-color: #007bff;
             color: white;
         }
-        .status-running {
-            color: green;
-            font-weight: bold;
+        td {
+            background-color: rgba(255, 255, 255, 0.2);
         }
-        .status-revision {
-            color: orange;
-        }
-        .status-complete {
-            color: blue;
-        }
-        input {
-            width: 100%;
-            padding: 5px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
+        .edit-btn, .delete-btn, .save-btn, .toggle-btn {
+            padding: 8px 12px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
+            color: white;
+            transition: all 0.3s;
         }
         .edit-btn {
             background-color: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
         }
         .edit-btn:hover {
             background-color: #218838;
         }
+        .delete-btn {
+            background-color: #dc3545;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .save-btn {
+            background-color: #ffc107;
+        }
+        .save-btn:hover {
+            background-color: #e0a800;
+        }
+        .toggle-btn {
+            background-color: #17a2b8;
+        }
+        .toggle-btn:hover {
+            background-color: #138496;
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Task List</h1>
-    </header>
-    <div class="container">
-        <!-- Form to Add New Task -->
-        <h2>Add New Task</h2>
-        <form id="task-form">
-            <input type="text" id="subject" placeholder="Subject" required>
-            <input type="text" id="chapter" placeholder="Chapter" required>
-            <input type="text" id="status" placeholder="Status (e.g., Running, Complete)" required>
-            <button type="submit">Add Task</button>
-        </form>
 
-        <!-- Table for Displaying Tasks -->
-        <table id="task-table">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Chapter</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="task-body">
-                <!-- Data will be loaded here dynamically -->
-            </tbody>
-        </table>
+<header>
+    <h1>Task List Manager</h1>
+</header>
+
+<div class="container">
+    <!-- Task Form -->
+    <div class="task-form">
+        <h2>Add New Task</h2>
+        <input type="text" id="subject" placeholder="Subject" required>
+        <input type="text" id="chapter" placeholder="Chapter Details" required>
+        <input type="text" id="data" placeholder="Additional Data" required>
+        <button id="add-task">Add Task</button>
     </div>
 
-    <script>
-        // Sample Data
-        const initialData = [
-            {
-                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
-                "chapter": "স্থির তড়িৎ",
-                "status": "যারক"
-            },
-            {
-                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
-                "chapter": "পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান",
-                "status": "Running"
-            },
-            {
-                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
-                "chapter": "সেমিকন্ডাক্টর ও ইলেকট্রনিক্স",
-                "status": "CO-MCQ"
-            },
-            {
-                "subject": "রসায়ন ২য় পত্র",
-                "chapter": "পরিবেশ রসায়ন",
-                "status": "মতবাদ এক বিক্রিয়া"
-            },
-            {
-                "subject": "রসায়ন ২য় পত্র",
-                "chapter": "জৈব রসায়ন",
-                "status": "Running"
-            },
-            {
-                "subject": "রসায়ন ২য় পত্র",
-                "chapter": "পরিমাণগত রসায়ন",
-                "status": "CO-MCQ"
-            },
-            {
-                "subject": "উচ্চতর গণিত ২য় পত্র",
-                "chapter": "স্থিতি বিদ্যা",
-                "status": "সম্পূর্ণ"
-            },
-            {
-                "subject": "উচ্চতর গণিত ২য় পত্র",
-                "chapter": "সমতলে বস্তুর গতিবিধি",
-                "status": "সম্পূর্ণ"
-            },
-            {
-                "subject": "প্রাণিবিজ্ঞান",
-                "chapter": "চলন ও অঙ্গ চালনা",
-                "status": "Running"
-            },
-            {
-                "subject": "প্রাণিবিজ্ঞান",
-                "chapter": "জিনতত্ত্ব ও বিবর্তন",
-                "status": "Running"
-            }
-        ];
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <button id="all-tasks" onclick="showTasks('all')">All Tasks</button>
+        <button id="remaining-tasks" onclick="showTasks('remaining')">Remaining Tasks</button>
+        <button id="completed-tasks" onclick="showTasks('completed')">Completed Tasks</button>
+    </div>
 
-        // Function to load tasks from localStorage
-        function loadTasks() {
-            let tasks = JSON.parse(localStorage.getItem('tasks'));
-            if (!tasks) {
-                tasks = initialData;
-            }
-            const taskBody = document.getElementById('task-body');
-            taskBody.innerHTML = '';
+    <!-- Task Table -->
+    <table id="task-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Chapter Details</th>
+                <th>Additional Data</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="task-body">
+            <!-- Tasks will be dynamically populated here -->
+        </tbody>
+    </table>
+</div>
 
-            tasks.forEach((task, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td contenteditable="true">${task.subject}</td>
-                    <td contenteditable="true">${task.chapter}</td>
-                    <td contenteditable="true" class="status-${task.status.toLowerCase()}">${task.status}</td>
-                    <td><button class="edit-btn" onclick="editTask(${index})">Edit</button></td>
-                `;
-                taskBody.appendChild(row);
-            });
+<script>
+    // Load tasks from localStorage
+    function loadTasks() {
+        const allTasks = localStorage.getItem('allTasks') ? JSON.parse(localStorage.getItem('allTasks')) : [];
+        const remainingTasks = localStorage.getItem('remainingTasks') ? JSON.parse(localStorage.getItem('remainingTasks')) : [];
+        const completedTasks = localStorage.getItem('completedTasks') ? JSON.parse(localStorage.getItem('completedTasks')) : [];
+
+        return { allTasks, remainingTasks, completedTasks };
+    }
+
+    // Save tasks to localStorage
+    function saveTasks(allTasks, remainingTasks, completedTasks) {
+        localStorage.setItem('allTasks', JSON.stringify(allTasks));
+        localStorage.setItem('remainingTasks', JSON.stringify(remainingTasks));
+        localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+    }
+
+    // Show tasks in table
+    function showTasks(category) {
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const taskTable = document.getElementById('task-table');
+        const taskBody = document.getElementById('task-body');
+        taskBody.innerHTML = '';
+
+        let tasks = [];
+        if (category === 'remaining') {
+            tasks = remainingTasks;
+        } else if (category === 'completed') {
+            tasks = completedTasks;
+        } else {
+            tasks = allTasks;
         }
 
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // Edit Task - Get the task and save the updated data
-        function editTask(index) {
-            const rows = document.querySelectorAll('#task-table tbody tr');
-            const row = rows[index];
-            const subject = row.children[0].innerText;
-            const chapter = row.children[1].innerText;
-            const status = row.children[2].innerText;
-
-            // Update data in the array
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || initialData;
-            tasks[index] = { subject, chapter, status };
-
-            // Save updated tasks to localStorage
-            saveTasks(tasks);
-            loadTasks(); // Reload the tasks
-        }
-
-        // Add new task
-        document.getElementById('task-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const subject = document.getElementById('subject').value;
-            const chapter = document.getElementById('chapter').value;
-            const status = document.getElementById('status').value;
-
-            const newTask = { subject, chapter, status };
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || initialData;
-            tasks.push(newTask);
-
-            saveTasks(tasks);
-            loadTasks(); // Reload tasks
-
-            // Clear the form inputs
-            document.getElementById('subject').value = '';
-            document.getElementById('chapter').value = '';
-            document.getElementById('status').value = '';
+        tasks.forEach((task, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td contenteditable="true">${task.subject}</td>
+                <td contenteditable="true">${task.chapter}</td>
+                <td contenteditable="true">${task.data}</td>
+                <td class="status-${task.status.toLowerCase()}">${task.status}</td>
+                <td>
+                    <button class="edit-btn" onclick="editTask(${index})">Edit</button>
+                    <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+                    <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Complete</button>
+                    <button class="save-btn hidden" onclick="saveTask(${index})">Save</button>
+                </td>
+            `;
+            taskBody.appendChild(row);
         });
+    }
 
-        // Initial load of tasks
-        loadTasks();
-    </script>
+    // Add new task
+    document.getElementById('add-task').addEventListener('click', function () {
+        const subject = document.getElementById('subject').value;
+        const chapter = document.getElementById('chapter').value;
+        const data = document.getElementById('data').value;
+
+        const newTask = { subject, chapter, data, status: "Remaining" };
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+
+        allTasks.push(newTask);
+        remainingTasks.push(newTask);
+
+        saveTasks(allTasks, remainingTasks, completedTasks);
+        showTasks('all');
+    });
+
+    // Edit task
+    function editTask(index) {
+        const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
+        row.querySelectorAll('td')[0].setAttribute('contenteditable', 'true');
+        row.querySelectorAll('td')[1].setAttribute('contenteditable', 'true');
+        row.querySelectorAll('td')[2].setAttribute('contenteditable', 'true');
+        row.querySelector('.save-btn').classList.remove('hidden');
+    }
+
+    // Save edited task
+    function saveTask(index) {
+        const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
+        const subject = row.querySelectorAll('td')[0].innerText;
+        const chapter = row.querySelectorAll('td')[1].innerText;
+        const data = row.querySelectorAll('td')[2].innerText;
+        const status = row.querySelectorAll('td')[3].innerText;
+
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const updatedTask = { subject, chapter, data, status };
+
+        allTasks[index] = updatedTask;
+        saveTasks(allTasks, remainingTasks, completedTasks);
+        showTasks('all');
+    }
+
+    // Delete task
+    function deleteTask(index) {
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+
+        allTasks.splice(index, 1);
+        saveTasks(allTasks, remainingTasks, completedTasks);
+        showTasks('all');
+    }
+
+    // Toggle task completion
+    function toggleTask(index) {
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const task = allTasks[index];
+
+        if (task.status === 'Complete') {
+            task.status = 'Remaining';
+            remainingTasks.push(task);
+            completedTasks.splice(index, 1);
+        } else {
+            task.status = 'Complete';
+            completedTasks.push(task);
+            remainingTasks.splice(index, 1);
+        }
+
+        saveTasks(allTasks, remainingTasks, completedTasks);
+        showTasks('all');
+    }
+
+    // Load the initial tasks when the page is ready
+    window.onload = function() {
+        showTasks('all');
+    };
+
+</script>
+
 </body>
 </html>
