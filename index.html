@@ -216,9 +216,9 @@
             const row = document.createElement('tr');
             const rowClass = task.status === "Complete" ? "completed" : "";
             row.innerHTML = `
-                <td contenteditable="true" class="${rowClass}">${task.subject}</td>
-                <td contenteditable="true" class="${rowClass}">${task.chapter}</td>
-                <td contenteditable="true" class="${rowClass}">${task.data}</td>
+                <td contenteditable="false" class="${rowClass}">${task.subject}</td>
+                <td contenteditable="false" class="${rowClass}">${task.chapter}</td>
+                <td contenteditable="false" class="${rowClass}">${task.data}</td>
                 <td class="status-${task.status.toLowerCase()} ${rowClass}">${task.status}</td>
                 <td>
                     <button class="edit-btn" onclick="editTask(${index})">Edit</button>
@@ -255,7 +255,10 @@
         const buttons = row.querySelectorAll('button');
         buttons.forEach(button => button.classList.toggle('hidden'));
 
-        row.querySelectorAll('td').forEach(cell => cell.contentEditable = 'true');
+        row.querySelectorAll('td').forEach(cell => {
+            cell.contentEditable = 'true';
+            cell.classList.add('editable');
+        });
     }
 
     // Save task
@@ -268,7 +271,13 @@
         task.data = row.querySelectorAll('td')[2].innerText;
 
         saveTasks(allTasks);
+        row.querySelectorAll('td').forEach(cell => {
+            cell.contentEditable = 'false';
+            cell.classList.remove('editable');
+        });
+
         row.querySelector('.save-btn').classList.add('hidden');
+        row.querySelector('.edit-btn').classList.remove('hidden');
     }
 
     // Add new task
