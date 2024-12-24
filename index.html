@@ -35,21 +35,21 @@
 
         .username {
             font-size: 1.2rem;
-            font-weight: bold;
+            margin-left: auto;
         }
 
-        .save-task-btn {
+        .add-task-btn {
             background-color: #007bff;
             color: white;
             padding: 12px 24px;
-            border-radius: 20px;
-            border: none;
+            border-radius: 25px;
+            border: 2px solid #007bff;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
         }
 
-        .save-task-btn:hover {
+        .add-task-btn:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
@@ -87,19 +87,6 @@
         .task-form button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
-        }
-
-        .summary-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .summary {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: left;
         }
 
         table {
@@ -164,22 +151,16 @@
     <header>
         <h1>সিলেবাস</h1>
         <span class="username" id="username"></span>
+        <button id="toggle-form" class="add-task-btn">Add Task</button>
     </header>
 
     <div class="container">
-        <div class="summary-container">
-            <div class="summary" id="task-summary">
-                <!-- The summary will be updated dynamically -->
-            </div>
-            <button id="toggle-form" class="save-task-btn">Add Task</button>
-        </div>
-
         <div class="task-form" id="task-form">
             <h2>যোগ করুন</h2>
             <input type="text" id="subject" placeholder="বিষয়">
             <input type="text" id="chapter" placeholder="অধ্যায়">
             <input id="details" placeholder="টপিক"/>
-            <button id="save-task">সেভ করুন </button>
+            <button id="save-task">সেভ করুন</button>
         </div>
 
         <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
@@ -205,40 +186,34 @@
         const taskTable = document.getElementById('task-table');
         const noTasksMessage = document.getElementById('no-tasks-message');
         const taskList = document.getElementById('task-list');
-        const taskSummary = document.getElementById('task-summary');
         const usernameElement = document.getElementById('username');
 
         // Ask for the user's name if not already saved
         function askUserName() {
             let username = localStorage.getItem('username');
             if (!username) {
-                username = prompt("What is your name?");
-                if (username) {
-                    localStorage.setItem('username', username);
-                } else {
-                    username = "User";
-                }
+                setTimeout(() => { // Delay for a smoother experience
+                    username = prompt("What is your name?");
+                    if (username) {
+                        localStorage.setItem('username', username);
+                    } else {
+                        username = "User";
+                    }
+                    usernameElement.textContent = `Welcome, ${username}`;
+                }, 500); // 500ms delay
+            } else {
+                usernameElement.textContent = `Welcome, ${username}`;
             }
-            usernameElement.textContent = `Welcome, ${username}`;
         }
 
         function saveTasksToLocalStorage() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        function updateSummary() {
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(task => task.status === 'Complete').length;
-            const remainingTasks = totalTasks - completedTasks;
-
-            taskSummary.innerText = `Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks}`;
-        }
-
         function showTasks() {
             if (tasks.length === 0) {
                 taskTable.classList.add('hidden');
                 noTasksMessage.classList.remove('hidden');
-                taskSummary.innerText = ''; // Clear the summary when there are no tasks
                 return;
             }
 
@@ -262,8 +237,6 @@
                 `;
                 taskList.appendChild(row);
             });
-
-            updateSummary();
         }
 
         function toggleTask(index) {
@@ -303,8 +276,11 @@
             document.getElementById('details').value = '';
         });
 
-        askUserName();
-        showTasks();
+        // Initialize
+        window.onload = () => {
+            askUserName();
+            showTasks();
+        };
     </script>
 </body>
 </html>
