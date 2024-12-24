@@ -169,65 +169,79 @@
     </div>
 
     <script>
-        let tasks = [];
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
         const taskForm = document.getElementById('task-form');
         const taskTable = document.getElementById('task-table');
         const noTasksMessage = document.getElementById('no-tasks-message');
         const taskList = document.getElementById('task-list');
 
+        function saveTasksToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
         function showTasks() {
-            taskList.innerHTML = '';
             if (tasks.length === 0) {
-                noTasksMessage.classList.remove('hidden');
                 taskTable.classList.add('hidden');
-            } else {
-                noTasksMessage.classList.add('hidden');
-                taskTable.classList.remove('hidden');
-                tasks.forEach((task, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${task.subject}</td>
-                        <td>${task.chapter}</td>
-                        <td>${task.details}</td>
-                        <td>${task.status}</td>
-                        <td>
-                            <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
-                            <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                        </td>
-                    `;
-                    taskList.appendChild(row);
-                });
+                noTasksMessage.classList.remove('hidden');
+                return;
             }
+
+            taskTable.classList.remove('hidden');
+            noTasksMessage.classList.add('hidden');
+            taskList.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.subject}</td>
+                    <td>${task.chapter}</td>
+                    <td>${task.details}</td>
+                    <td>${task.status}</td>
+                    <td>
+                        <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
+                        <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+                    </td>
+                `;
+                taskList.appendChild(row);
+            });
         }
 
         function toggleTask(index) {
             tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
+            saveTasksToLocalStorage();
             showTasks();
         }
 
         function deleteTask(index) {
             tasks.splice(index, 1);
+            saveTasksToLocalStorage();
             showTasks();
+            alert('Task deleted successfully!');
         }
 
         document.getElementById('toggle-form').addEventListener('click', () => {
-            taskForm.style.display = taskForm.style.display === 'none' || !taskForm.style.display ? 'flex' : 'none';
+            taskForm.style.display = taskForm.style.display === 'none' || taskForm.style.display === '' ? 'block' : 'none';
         });
 
         document.getElementById('save-task').addEventListener('click', () => {
-            const subject = document.getElementById('subject').value;
-            const chapter = document.getElementById('chapter').value;
-            const details = document.getElementById('details').value;
+            const subject = document.getElementById('subject').value.trim();
+            const chapter = document.getElementById('chapter').value.trim();
+            const details = document.getElementById('details').value.trim();
 
-            if (subject && chapter && details) {
-                tasks.push({ subject, chapter, details, status: 'Remaining' });
-                showTasks();
-                taskForm.style.display = 'none';
-                document.getElementById('subject').value = '';
-                document.getElementById('chapter').value = '';
-                document.getElementById('details').value = '';
+            if (!subject || !chapter || !details) {
+                alert('Please fill in all fields!');
+                return;
             }
+
+            tasks.push({ subject, chapter, details, status: 'Remaining' });
+            saveTasksToLocalStorage();
+            showTasks();
+            alert('Task added successfully!');
+            taskForm.style.display = 'none';
+            document.getElementById('subject').value = '';
+            document.getElementById('chapter').value = '';
+            document.getElementById('details').value = '';
         });
 
         showTasks();
