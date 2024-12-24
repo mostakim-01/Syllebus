@@ -71,7 +71,7 @@
             margin-bottom: 20px;
         }
 
-        .task-form input, .task-form textarea, .task-form button {
+        .task-form input, .task-form textarea, .task-form button, .task-form select {
             padding: 14px;
             border-radius: 20px;
             border: 2px solid #007bff;
@@ -219,7 +219,13 @@
 
         <div class="task-form" id="task-form">
             <h2>যোগ করুন</h2>
-            <input type="text" id="subject" placeholder="বিষয়">
+            <select id="subject">
+                <option value="">বিষয় নির্বাচন করুন</option>
+                <option value="প্রাণিবিজ্ঞান">প্রাণিবিজ্ঞান</option>
+                <option value="উচ্চতর গণিত ২য় পত্র">উচ্চতর গণিত ২য় পত্র</option>
+                <option value="রসায়ন ২য় পত্র">রসায়ন ২য় পত্র</option>
+                <option value="পদার্থবিজ্ঞান ২য় পত্র">পদার্থবিজ্ঞান ২য় পত্র</option>
+            </select>
             <input type="text" id="chapter" placeholder="অধ্যায়">
             <input id="details" placeholder="টপিক"/>
             <button id="save-task">সেভ করুন </button>
