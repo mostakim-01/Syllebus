@@ -201,15 +201,36 @@
         .modal-content button:hover {
             background-color: #0056b3;
         }
+
+        .name-input-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .name-input-modal .modal-content {
+            text-align: center;
+        }
+
+        .name-input-modal input {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
     <header>
         <h1>সিলেবাস</h1>
-        <div id="user-name" class="user-welcome">
-            <input type="text" id="user-input" placeholder="Enter your name" style="padding: 10px; border-radius: 20px; border: 2px solid #007bff; font-size: 16px;">
-            <button onclick="saveUserName()" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-size: 16px;">Save</button>
-        </div>
+        <div id="user-name" class="user-welcome"></div>
     </header>
 
     <div class="container">
@@ -251,10 +272,19 @@
         </div>
     </div>
 
+    <div id="name-input-modal" class="name-input-modal">
+        <div class="modal-content">
+            <p>What is your name?</p>
+            <input type="text" id="name-input" placeholder="Enter your name">
+            <button onclick="saveUserName()">Save</button>
+        </div>
+    </div>
+
     <script>
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
         const userNameElement = document.getElementById('user-name');
+        const nameInputModal = document.getElementById('name-input-modal');
+        const nameInputField = document.getElementById('name-input');
         const taskForm = document.getElementById('task-form');
         const taskTable = document.getElementById('task-table');
         const noTasksMessage = document.getElementById('no-tasks-message');
@@ -262,7 +292,6 @@
         const taskSummary = document.getElementById('task-summary');
         const modal = document.getElementById('modal');
         const modalMessage = document.getElementById('modal-message');
-        const userInput = document.getElementById('user-input');
 
         function showModal(message) {
             modalMessage.textContent = message;
@@ -274,13 +303,14 @@
         }
 
         function saveUserName() {
-            const username = userInput.value.trim();
+            const username = nameInputField.value.trim();
             if (username) {
                 localStorage.setItem('username', username);
                 userNameElement.textContent = `Welcome, ${username}`;
-                userInput.value = ''; // Clear the input field
+                nameInputModal.style.display = 'none'; // Hide the name input modal
+                showTasks();
             } else {
-                showModal('Please enter a valid name!');
+                alert("Please enter a valid name.");
             }
         }
 
@@ -288,11 +318,9 @@
             const username = localStorage.getItem('username');
             if (username) {
                 userNameElement.textContent = `Welcome, ${username}`;
+                showTasks();
             } else {
-                userNameElement.innerHTML = `
-                    <input type="text" id="user-input" placeholder="Enter your name" style="padding: 10px; border-radius: 20px; border: 2px solid #007bff; font-size: 16px;">
-                    <button onclick="saveUserName()" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-size: 16px;">Save</button>
-                `;
+                nameInputModal.style.display = 'flex'; // Show name input modal if not set
             }
         };
 
