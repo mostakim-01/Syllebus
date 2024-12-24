@@ -4,44 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task List Manager</title>
-    <link rel="stylesheet" href="style.css"> 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        .add-task-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-task-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .task-form {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .task-form input, .task-form textarea, .task-form button {
+            padding: 14px;
+            border-radius: 20px;
+            border: 2px solid #007bff;
+            font-size: 16px;
+        }
+
+        .task-form button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .task-form button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        td {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .delete-btn, .toggle-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .toggle-btn {
+            background-color: #17a2b8;
+        }
+
+        .toggle-btn:hover {
+            background-color: #138496;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Task List Manager</h1>
+        <button id="toggle-form" class="add-task-btn">Add Task</button>
+    </header>
 
-<header>
-    <h1>Task List Manager</h1>
-    <button id="toggle-form" class="add-task-btn">Add Task</button>
-</header>
+    <div class="container">
+        <div class="task-form" id="task-form">
+            <h2>Add New Task</h2>
+            <input type="text" id="subject" placeholder="Subject">
+            <input type="text" id="chapter" placeholder="Chapter">
+            <textarea id="details" placeholder="Chapter Details"></textarea>
+            <button id="save-task">Save Task</button>
+        </div>
 
-<div class="container">
-    <!-- Task Form -->
-    <div class="task-form hidden" id="task-form">
-        <h2>Add New Task</h2>
-        <input type="text" id="subject" placeholder="Subject" />
-        <input type="text" id="chapter" placeholder="Chapter" />
-        <textarea id="details" placeholder="Chapter Details"></textarea>
-        <button id="save-task">Save Task</button>
+        <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
+
+        <table id="task-table" class="hidden">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Chapter</th>
+                    <th>Chapter Details</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="task-list"></tbody>
+        </table>
     </div>
 
-    <!-- No tasks message -->
-    <div id="no-tasks-message" style="display: none; color: #007bff; font-size: 18px; margin-top: 20px;">
-        <p>No tasks available. Please add a task!</p>
-    </div>
+    <script>
+        let tasks = [];
 
-    <!-- Tasks Table -->
-    <table id="task-table">
-        <thead>
-            <tr>
-                <th>Subject</th>
-                <th>Chapter</th>
-                <th>Chapter Details</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="task-list"></tbody>
-    </table>
-</div>
+        const taskForm = document.getElementById('task-form');
+        const taskTable = document.getElementById('task-table');
+        const noTasksMessage = document.getElementById('no-tasks-message');
+        const taskList = document.getElementById('task-list');
 
-<script src="script.js"></script>
+        function showTasks() {
+            taskList.innerHTML = '';
+            if (tasks.length === 0) {
+                noTasksMessage.classList.remove('hidden');
+                taskTable.classList.add('hidden');
+            } else {
+                noTasksMessage.classList.add('hidden');
+                taskTable.classList.remove('hidden');
+                tasks.forEach((task, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${task.subject}</td>
+                        <td>${task.chapter}</td>
+                        <td>${task.details}</td>
+                        <td>${task.status}</td>
+                        <td>
+                            <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
+                            <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+                        </td>
+                    `;
+                    taskList.appendChild(row);
+                });
+            }
+        }
+
+        function toggleTask(index) {
+            tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
+            showTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            showTasks();
+        }
+
+        document.getElementById('toggle-form').addEventListener('click', () => {
+            taskForm.classList.toggle('hidden');
+        });
+
+        document.getElementById('save-task').addEventListener('click', () => {
+            const subject = document.getElementById('subject').value;
+            const chapter = document.getElementById('chapter').value;
+            const details = document.getElementById('details').value;
+
+            if (subject && chapter && details) {
+                tasks.push({ subject, chapter, details, status: 'Remaining' });
+                showTasks();
+                taskForm.classList.add('hidden');
+                document.getElementById('subject').value = '';
+                document.getElementById('chapter').value = '';
+                document.getElementById('details').value = '';
+            }
+        });
+
+        showTasks();
+    </script>
+</body>
 </html>
