@@ -4,203 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task List Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #007bff;
-            color: white;
-            padding: 15px;
-        }
-        header h1 {
-            margin-left: 10px;
-        }
-
-        /* Styled Add Task Button */
-        .add-task-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .add-task-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center; /* Center content inside container */
-        }
-
-        /* Task Form */
-        .task-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            visibility: hidden;
-            height: 0;
-        }
-        .task-form.show {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-            height: auto;
-        }
-        .task-form input, .task-form button {
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #007bff;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
-        .task-form button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border-radius: 20px;
-        }
-        .task-form input {
-            background-color: rgba(255, 255, 255, 0.3);
-            color: #333;
-        }
-        .task-form button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        /* Table Styles */
-        table {
-            width: 100%;
-            max-width: 1000px; /* Set max width to limit size */
-            margin: 20px auto;
-            border-collapse: collapse;
-            overflow-x: auto;
-            display: block;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-            text-transform: uppercase;
-        }
-        td {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Row Hover Effect */
-        tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.2);
-            cursor: pointer;
-        }
-
-        .delete-btn, .toggle-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            font-size: 14px;
-            transition: all 0.3s ease-in-out;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-        .toggle-btn {
-            background-color: #17a2b8;
-        }
-        .toggle-btn:hover {
-            background-color: #138496;
-            transform: translateY(-2px);
-        }
-
-        /* Line-through for completed tasks */
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
-
-        /* Actions column increased width */
-        .actions-column {
-            width: 250px;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            .task-form {
-                gap: 8px;
-            }
-            .task-form input, .task-form button {
-                font-size: 14px;
-                padding: 10px;
-            }
-            table {
-                max-height: 400px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
 <header>
     <h1>Task List Manager</h1>
-    <button id="toggle-form" class="add-task-btn">Add Task</button>
+    <button id="toggle-form" class="add-task-btn" aria-expanded="false" aria-controls="task-form">Add Task</button>
 </header>
-
 <div class="container">
     <!-- Task Form -->
-    <div class="task-form hidden" id="task-form">
+    <div class="task-form hidden" id="task-form" role="form" aria-hidden="true">
         <h2>Add New Task</h2>
-        <input type="text" id="subject" placeholder="Subject" />
-        <input type="text" id="chapter" placeholder="Chapter" />
-        <textarea id="details" placeholder="Chapter Details"></textarea>
+        <input type="text" id="subject" placeholder="Subject" required aria-label="Task Subject"/>
+        <input type="text" id="chapter" placeholder="Chapter" required aria-label="Task Chapter"/>
+        <textarea id="details" placeholder="Chapter Details" required aria-label="Task Details"></textarea>
         <button id="save-task">Save Task</button>
     </div>
-
     <!-- No tasks message -->
-    <div id="no-tasks-message" style="display: none; color: #007bff; font-size: 18px; margin-top: 20px;">
+    <div id="no-ttasks-message" class="no-tasks" role="alert">
         <p>No tasks available. Please add a task!</p>
     </div>
-
     <!-- Tasks Table -->
-    <table id="task-table">
+    <table id="task-table" role="table">
         <thead>
             <tr>
                 <th>Subject</th>
@@ -213,125 +38,6 @@
         <tbody id="task-list"></tbody>
     </table>
 </div>
-
-<script>
-    // Preloaded task data from your previous input
-    const preloadedTasks = [
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'স্থির তড়িৎ', details: 'যারক', status: 'Remaining' },
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান', details: 'Running', status: 'Remaining' },
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'সেমিকন্ডাক্টর ও ইলেকট্রনিক্স', details: 'CO-MCQ', status: 'Complete' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'পরিবেশ রসায়ন', details: 'মতবাদ এক বিক্রিয়া', status: 'Complete' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'জৈব রসায়ন', details: 'Running', status: 'Remaining' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'পরিমাণগত রসায়ন', details: 'CO-MCQ', status: 'Complete' },
-        { subject: 'উচ্চতর গণিত ২য় পত্র', chapter: 'স্থিতি বিদ্যা', details: 'সম্পূর্ণ', status: 'Complete' },
-        { subject: 'উচ্চতর গণিত ২য় পত্র', chapter: 'সমতলে বস্তুর গতিবিধি', details: 'সম্পূর্ণ', status: 'Complete' },
-        { subject: 'প্রাণিবিজ্ঞান', chapter: 'চলন ও অঙ্গ চালনা', details: 'Running', status: 'Remaining' },
-        { subject: 'প্রাণিবিজ্ঞান', chapter: 'জিনতত্ত্ব ও বিবর্তন', details: 'Running', status: 'Remaining' }
-    ];
-
-    // Save preloaded data to localStorage
-    function saveTasks(tasks) {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-
-    // Load tasks from localStorage
-    function loadTasks() {
-        const tasks = localStorage.getItem('tasks');
-        return tasks ? JSON.parse(tasks) : preloadedTasks; // Load preloaded data if no tasks are in localStorage
-    }
-
-    // Show tasks in the table
-    function showTasks() {
-        const tasks = loadTasks();
-        const taskList = document.getElementById('task-list');
-        const noTasksMessage = document.getElementById('no-tasks-message');
-        
-        // If no tasks, show the message and hide the table
-        if (tasks.length === 0) {
-            noTasksMessage.style.display = 'block';
-            taskList.style.display = 'none';
-            return;
-        } else {
-            noTasksMessage.style.display = 'none';
-            taskList.style.display = 'table-row-group';
-        }
-
-        taskList.innerHTML = '';
-
-        // Display remaining tasks first, completed tasks at the bottom
-        const remainingTasks = tasks.filter(task => task.status === 'Remaining');
-        const completedTasks = tasks.filter(task => task.status === 'Complete');
-
-        // Show remaining tasks
-        remainingTasks.forEach((task, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${task.subject}</td>
-                <td>${task.chapter}</td>
-                <td>${task.details}</td>
-                <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.status}</td>
-                <td>
-                    <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
-                    <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                </td>
-            `;
-            taskList.appendChild(row);
-        });
-
-        // Show completed tasks at the bottom
-        completedTasks.forEach((task, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${task.subject}</td>
-                <td>${task.chapter}</td>
-                <td>${task.details}</td>
-                <td class="completed">${task.status}</td>
-                <td>
-                    <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
-                    <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                </td>
-            `;
-            taskList.appendChild(row);
-        });
-    }
-
-    // Add new task
-    document.getElementById('save-task').addEventListener('click', () => {
-        const subject = document.getElementById('subject').value;
-        const chapter = document.getElementById('chapter').value;
-        const details = document.getElementById('details').value;
-        const tasks = loadTasks();
-        tasks.push({ subject, chapter, details, status: 'Remaining' });
-        saveTasks(tasks);
-        showTasks();
-        document.getElementById('task-form').classList.remove('show');
-    });
-
-    // Toggle task status (Complete or Remaining)
-    function toggleTask(index) {
-        const tasks = loadTasks();
-        tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
-        saveTasks(tasks);
-        showTasks();
-    }
-
-    // Delete task
-    function deleteTask(index) {
-        const tasks = loadTasks();
-        tasks.splice(index, 1);
-        saveTasks(tasks);
-        showTasks();
-    }
-
-    // Toggle task form visibility
-    document.getElementById('toggle-form').addEventListener('click', () => {
-        const form = document.getElementById('task-form');
-        form.classList.toggle('show');
-    });
-
-    // Initial load of tasks
-    showTasks();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
