@@ -226,28 +226,7 @@
         const taskList = document.getElementById('task-list');
         taskList.innerHTML = '';
 
-        // Display remaining tasks first, completed tasks at the bottom
-        const remainingTasks = tasks.filter(task => task.status === 'Remaining');
-        const completedTasks = tasks.filter(task => task.status === 'Complete');
-
-        // Show remaining tasks
-        remainingTasks.forEach((task, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${task.subject}</td>
-                <td>${task.chapter}</td>
-                <td>${task.details}</td>
-                <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.status}</td>
-                <td>
-                    <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
-                    <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                </td>
-            `;
-            taskList.appendChild(row);
-        });
-
-        // Show completed tasks at the bottom
-        completedTasks.forEach((task, index) => {
+        tasks.forEach((task, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${task.subject}</td>
@@ -271,11 +250,10 @@
 
         if (subject && chapter && details) {
             const tasks = loadTasks();
-            tasks.unshift({ subject, chapter, details, status: 'Remaining' }); // Add to the top
+            tasks.push({ subject, chapter, details, status: 'Remaining' });
             saveTasks(tasks);
             showTasks();
             document.getElementById('task-form').classList.remove('show');
-            alert('Task added successfully!');
         }
     });
 
@@ -293,7 +271,6 @@
         tasks.splice(index, 1);
         saveTasks(tasks);
         showTasks();
-        alert('Task deleted successfully!');
     }
 
     // Toggle Add Task Form visibility
