@@ -33,6 +33,11 @@
             font-size: 1.8rem;
         }
 
+        .username {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
         .save-task-btn {
             background-color: #007bff;
             color: white;
@@ -158,6 +163,7 @@
 <body>
     <header>
         <h1>সিলেবাস</h1>
+        <span class="username" id="username"></span>
     </header>
 
     <div class="container">
@@ -200,6 +206,21 @@
         const noTasksMessage = document.getElementById('no-tasks-message');
         const taskList = document.getElementById('task-list');
         const taskSummary = document.getElementById('task-summary');
+        const usernameElement = document.getElementById('username');
+
+        // Ask for the user's name if not already saved
+        function askUserName() {
+            let username = localStorage.getItem('username');
+            if (!username) {
+                username = prompt("What is your name?");
+                if (username) {
+                    localStorage.setItem('username', username);
+                } else {
+                    username = "User";
+                }
+            }
+            usernameElement.textContent = `Welcome, ${username}`;
+        }
 
         function saveTasksToLocalStorage() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -282,6 +303,7 @@
             document.getElementById('details').value = '';
         });
 
+        askUserName();
         showTasks();
     </script>
 </body>
