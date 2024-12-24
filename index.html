@@ -63,10 +63,14 @@
             opacity: 0;
             transform: translateY(-20px);
             transition: all 0.3s ease-in-out;
+            visibility: hidden;
+            height: 0;
         }
         .task-form.show {
             opacity: 1;
             transform: translateY(0);
+            visibility: visible;
+            height: auto;
         }
         .task-form input, .task-form button {
             padding: 12px;
@@ -277,9 +281,17 @@
             document.getElementById('chapter').value = '';
             document.getElementById('data').value = '';
             showTasks();
-            toggleForm(); // Hide form after adding
         }
     });
+
+    // Toggle task completion status
+    function toggleTask(index) {
+        const allTasks = loadTasks();
+        const task = allTasks[index];
+        task.status = task.status === "Complete" ? "Remaining" : "Complete";
+        saveTasks(allTasks);
+        showTasks();
+    }
 
     // Delete task
     function deleteTask(index) {
@@ -289,28 +301,14 @@
         showTasks();
     }
 
-    // Toggle task status
-    function toggleTask(index) {
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-        task.status = task.status === "Complete" ? "Remaining" : "Complete";
-        saveTasks(allTasks);
-        showTasks();
-    }
+    // Toggle Add Task Form visibility
+    document.getElementById('toggle-form').addEventListener('click', function() {
+        const taskForm = document.getElementById('task-form');
+        taskForm.classList.toggle('show');
+    });
 
-    // Toggle task form visibility
-    function toggleForm() {
-        const form = document.getElementById('task-form');
-        form.classList.toggle('show');
-        form.classList.toggle('hidden');
-    }
-
-    // Initially show tasks
+    // Initial setup
     showTasks();
-
-    // Add event listener for adding task
-    document.getElementById('toggle-form').addEventListener('click', toggleForm);
-
 </script>
 </body>
 </html>
