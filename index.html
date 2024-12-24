@@ -1,185 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Syllabus Tracker</title>
-  <style>
-    :root {
-      --bg-color: #f4f4f4;
-      --text-color: #333;
-      --card-bg: #fff;
-      --button-bg: #2575fc;
-      --button-hover-bg: #6a11cb;
-    }
-    [data-theme="dark"] {
-      --bg-color: #1e1e1e;
-      --text-color: #f4f4f4;
-      --card-bg: #2a2a2a;
-      --button-bg: #4a90e2;
-      --button-hover-bg: #6b56d0;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-      background: var(--bg-color);
-      color: var(--text-color);
-      transition: background 0.3s, color 0.3s;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 2.5em;
-    }
-    form, .add-section, .settings {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-      transition: background 0.3s;
-    }
-    input, select, button {
-      padding: 10px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-    }
-    input, select {
-      flex: 1;
-      background: var(--card-bg);
-      color: var(--text-color);
-      border: 1px solid #ccc;
-      transition: background 0.3s, color 0.3s;
-    }
-    button {
-      background: var(--button-bg);
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: var(--button-hover-bg);
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: var(--card-bg);
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s;
-    }
-    .delete-btn {
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .delete-btn:hover {
-      background-color: darkred;
-    }
-    .settings {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .status-running {
+            color: green;
+            font-weight: bold;
+        }
+        .status-revision {
+            color: orange;
+        }
+        .status-complete {
+            color: blue;
+        }
+    </style>
 </head>
 <body>
-  <h1>Syllabus Tracker</h1>
-
-  <div class="settings">
-    <button id="toggle-theme">Toggle Dark Mode</button>
-  </div>
-
-  <form id="topic-form">
-    <input type="text" id="subject-input" placeholder="Subject" required>
-    <input type="text" id="paper-input" placeholder="Paper" required>
-    <input type="text" id="chapter-input" placeholder="Chapter" required>
-    <select id="status-dropdown" required>
-      <option value="Incomplete">Not Completed</option>
-      <option value="Complete">Completed</option>
-    </select>
-    <button type="submit">Add Topic</button>
-  </form>
-
-  <ul id="topic-list"></ul>
-
-  <script>
-    // Data of subjects
-    const topics = [
-      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'নিউটনিয়ান বলবিদ্যা', status: 'Complete' },
-      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'কাজ,শক্তি ও ক্ষমতা', status: 'Incomplete' },
-      { subject: 'পদার্থবিজ্ঞান ১ম পত্র', paper: '১ম পত্র', chapter: 'মহাকর্ষ ও অভিকর্ষ', status: 'Incomplete' },
-      { subject: 'পদার্থবিজ্ঞান ২য় পত্র', paper: '২য় পত্র', chapter: 'স্থির তড়িৎ', status: 'Incomplete' },
-      { subject: 'পদার্থবিজ্ঞান ২য় পত্র', paper: '২য় পত্র', chapter: 'পরমানুর গঠন', status: 'Complete' },
-      { subject: 'রসায়ন ১ম পত্র', paper: '১ম পত্র', chapter: 'রাসায়নিক বন্ধন', status: 'Complete' },
-      { subject: 'রসায়ন ২য় পত্র', paper: '২য় পত্র', chapter: 'পরিবেশ রসায়ন', status: 'Incomplete' },
-      { subject: 'উচ্চতর গনিত ১ম পত্র', paper: '১ম পত্র', chapter: 'ত্রিকোনমিতি', status: 'Complete' },
-      { subject: 'উচ্চতর গনিত ২য় পত্র', paper: '২য় পত্র', chapter: 'জটিল সংখ্যা', status: 'Incomplete' },
-      { subject: 'উদ্ভিদবিজ্ঞান', paper: '', chapter: 'উদ্ভিদ শারীরতত্ত', status: 'Complete' },
-      { subject: 'প্রাণিবিজ্ঞান', paper: '', chapter: 'প্রাণীর পরিচিতি', status: 'Incomplete' }
-    ];
-
-    const topicList = document.getElementById('topic-list');
-    const topicForm = document.getElementById('topic-form');
-    const subjectInput = document.getElementById('subject-input');
-    const paperInput = document.getElementById('paper-input');
-    const chapterInput = document.getElementById('chapter-input');
-    const statusDropdown = document.getElementById('status-dropdown');
-    const toggleThemeBtn = document.getElementById('toggle-theme');
-
-    // Function to render topics in the list
-    function renderTopics() {
-      topicList.innerHTML = '';
-      topics.forEach((topic, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${topic.subject} (${topic.paper}) - ${topic.chapter}</span>
-          <span>Status: ${topic.status}</span>
-          <button class="delete-btn" onclick="deleteTopic(${index})">Delete</button>
-        `;
-        topicList.appendChild(li);
-      });
-    }
-
-    // Function to delete a topic
-    function deleteTopic(index) {
-      topics.splice(index, 1);
-      renderTopics();
-    }
-
-    // Handle adding new topic
-    topicForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newTopic = {
-        subject: subjectInput.value,
-        paper: paperInput.value,
-        chapter: chapterInput.value,
-        status: statusDropdown.value
-      };
-      topics.push(newTopic);
-      renderTopics();
-      topicForm.reset();
-    });
-
-    // Handle theme toggle
-    toggleThemeBtn.addEventListener('click', () => {
-      document.body.dataset.theme = document.body.dataset.theme === 'dark' ? '' : 'dark';
-    });
-
-    renderTopics(); // Initial rendering of topics
-  </script>
+    <header>
+        <h1>Task List</h1>
+    </header>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Chapter</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td>স্থির তড়িৎ</td>
+                    <td class="status-running">যারক</td>
+                </tr>
+                <tr>
+                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td>পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান</td>
+                    <td class="status-running">Running</td>
+                </tr>
+                <tr>
+                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td>সেমিকন্ডাক্টর ও ইলেকট্রনিক্স</td>
+                    <td class="status-complete">CO-MCQ</td>
+                </tr>
+                <tr>
+                    <td>রসায়ন ২য় পত্র</td>
+                    <td>পরিবেশ রসায়ন</td>
+                    <td class="status-complete">মতবাদ এক বিক্রিয়া</td>
+                </tr>
+                <tr>
+                    <td>রসায়ন ২য় পত্র</td>
+                    <td>জৈব রসায়ন</td>
+                    <td class="status-running">Running</td>
+                </tr>
+                <tr>
+                    <td>রসায়ন ২য় পত্র</td>
+                    <td>পরিমাণগত রসায়ন</td>
+                    <td class="status-complete">CO-MCQ</td>
+                </tr>
+                <tr>
+                    <td>উচ্চতর গণিত ২য় পত্র</td>
+                    <td>স্থিতি বিদ্যা</td>
+                    <td class="status-complete">সম্পূর্ণ</td>
+                </tr>
+                <tr>
+                    <td>উচ্চতর গণিত ২য় পত্র</td>
+                    <td>সমতলে বস্তুর গতিবিধি</td>
+                    <td class="status-complete">সম্পূর্ণ</td>
+                </tr>
+                <tr>
+                    <td>প্রাণিবিজ্ঞান</td>
+                    <td>চলন ও অঙ্গ চালনা</td>
+                    <td class="status-running">Running</td>
+                </tr>
+                <tr>
+                    <td>প্রাণিবিজ্ঞান</td>
+                    <td>জিনতত্ত্ব ও বিবর্তন</td>
+                    <td class="status-running">Running</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
