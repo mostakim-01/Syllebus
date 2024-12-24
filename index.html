@@ -33,18 +33,18 @@
             font-size: 1.8rem;
         }
 
-        .add-task-btn {
+        .save-task-btn {
             background-color: #007bff;
             color: white;
             padding: 12px 24px;
-            border-radius: 25px;
+            border-radius: 20px;
             border: none;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
         }
 
-        .add-task-btn:hover {
+        .save-task-btn:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
@@ -84,8 +84,14 @@
             transform: translateY(-2px);
         }
 
-        .summary {
+        .summary-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin: 20px 0;
+        }
+
+        .summary {
             font-size: 18px;
             font-weight: bold;
             text-align: left;
@@ -152,20 +158,22 @@
 <body>
     <header>
         <h1>সিলেবাস</h1>
-        <button id="toggle-form" class="add-task-btn">Add Task</button>
     </header>
 
     <div class="container">
+        <div class="summary-container">
+            <div class="summary" id="task-summary">
+                <!-- The summary will be updated dynamically -->
+            </div>
+            <button id="toggle-form" class="save-task-btn">Add Task</button>
+        </div>
+
         <div class="task-form" id="task-form">
             <h2>যোগ করুন</h2>
             <input type="text" id="subject" placeholder="বিষয়">
             <input type="text" id="chapter" placeholder="অধ্যায়">
             <input id="details" placeholder="টপিক"/>
             <button id="save-task">সেভ করুন </button>
-        </div>
-
-        <div class="summary" id="task-summary">
-            <!-- The summary will be updated dynamically -->
         </div>
 
         <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
