@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,6 +35,7 @@
 
         .user-welcome {
             font-size: 1rem;
+            margin-left: auto;
         }
 
         .save-task-btn {
@@ -60,6 +61,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
         .task-form {
@@ -157,7 +159,7 @@
             color: gray;
         }
 
-        #name-modal {
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -172,12 +174,12 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        #name-modal.active {
+        .modal.active {
             visibility: visible;
             opacity: 1;
         }
 
-        #name-modal-content {
+        .modal-content {
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -185,26 +187,18 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        #name-modal-content input {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            width: 80%;
-            margin-bottom: 10px;
-        }
-
-        #name-modal-content button {
+        .modal-content button {
+            margin-top: 20px;
             padding: 10px 20px;
+            border: none;
             background-color: #007bff;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
         }
 
-        #name-modal-content button:hover {
+        .modal-content button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -215,26 +209,20 @@
         <div id="user-name" class="user-welcome"></div>
     </header>
 
-    <div id="name-modal" class="name-modal">
-        <div id="name-modal-content">
-            <h2>What is your name?</h2>
-            <input type="text" id="name-input" placeholder="Enter your name">
-            <button id="name-submit">Submit</button>
-        </div>
-    </div>
-
     <div class="container">
         <div class="summary-container">
-            <div class="summary" id="task-summary"></div>
+            <div class="summary" id="task-summary">
+                <!-- The summary will be updated dynamically -->
+            </div>
             <button id="toggle-form" class="save-task-btn">Add Task</button>
         </div>
 
         <div class="task-form" id="task-form">
-            <h2>Add Task</h2>
-            <input type="text" id="subject" placeholder="Subject">
-            <input type="text" id="chapter" placeholder="Chapter">
-            <input type="text" id="details" placeholder="Details">
-            <button id="save-task">Save Task</button>
+            <h2>যোগ করুন</h2>
+            <input type="text" id="subject" placeholder="বিষয়">
+            <input type="text" id="chapter" placeholder="অধ্যায়">
+            <input id="details" placeholder="টপিক"/>
+            <button id="save-task">সেভ করুন </button>
         </div>
 
         <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
@@ -244,7 +232,7 @@
                 <tr>
                     <th>Subject</th>
                     <th>Chapter</th>
-                    <th>Details</th>
+                    <th>Chapter Details</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -253,31 +241,54 @@
         </table>
     </div>
 
-    <script>
-        const nameModal = document.getElementById('name-modal');
-        const nameInput = document.getElementById('name-input');
-        const nameSubmit = document.getElementById('name-submit');
-        const userNameElement = document.getElementById('user-name');
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
 
+    <script>
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
+        const userNameElement = document.getElementById('user-name');
+        const taskForm = document.getElementById('task-form');
+        const taskTable = document.getElementById('task-table');
+        const noTasksMessage = document.getElementById('no-tasks-message');
+        const taskList = document.getElementById('task-list');
+        const taskSummary = document.getElementById('task-summary');
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
         function askUserName() {
-            const storedName = localStorage.getItem('username');
-            if (storedName) {
-                userNameElement.textContent = `Welcome, ${storedName}`;
+            let username = localStorage.getItem('username');
+            if (!username) {
+                setTimeout(() => {
+                    username = prompt("What is your name?");
+                    if (username) {
+                        localStorage.setItem('username', username);
+                    } else {
+                        username = "User";
+                    }
+                    userNameElement.textContent = Welcome, ${username};
+                }, 500);
             } else {
-                nameModal.classList.add('active');
+                userNameElement.textContent = Welcome, ${username};
             }
         }
 
-        nameSubmit.addEventListener('click', () => {
-            const enteredName = nameInput.value.trim();
-            if (enteredName) {
-                localStorage.setItem('username', enteredName);
-                userNameElement.textContent = `Welcome, ${enteredName}`;
-                nameModal.classList.remove('active');
-            }
-        });
+        window.onload = () => {
+            askUserName();
+        };
 
         function saveTasksToLocalStorage() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -288,18 +299,14 @@
             const completedTasks = tasks.filter(task => task.status === 'Complete').length;
             const remainingTasks = totalTasks - completedTasks;
 
-            document.getElementById('task-summary').innerText = `Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks}`;
+            taskSummary.innerText = Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks};
         }
 
         function showTasks() {
-            const taskTable = document.getElementById('task-table');
-            const noTasksMessage = document.getElementById('no-tasks-message');
-            const taskList = document.getElementById('task-list');
-
             if (tasks.length === 0) {
                 taskTable.classList.add('hidden');
                 noTasksMessage.classList.remove('hidden');
-                document.getElementById('task-summary').innerText = '';
+                taskSummary.innerText = ''; // Clear the summary when there are no tasks
                 return;
             }
 
@@ -307,18 +314,20 @@
             noTasksMessage.classList.add('hidden');
             taskList.innerHTML = '';
 
-            tasks.forEach((task, index) => {
+            const sortedTasks = tasks.sort((a, b) => a.status === 'Complete' ? 1 : -1);
+
+            sortedTasks.forEach((task, index) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${task.subject}</td>
-                    <td>${task.chapter}</td>
-                    <td>${task.details}</td>
+                row.innerHTML = 
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.subject}</td>
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.chapter}</td>
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.details}</td>
                     <td>${task.status}</td>
                     <td>
-                        <button onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Incomplete' : 'Mark as Complete'}</button>
-                        <button onclick="deleteTask(${index})">Delete</button>
+                        <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
+                        <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
                     </td>
-                `;
+                ;
                 taskList.appendChild(row);
             });
 
@@ -326,7 +335,7 @@
         }
 
         function toggleTask(index) {
-            tasks[index].status = tasks[index].status === 'Complete' ? 'Incomplete' : 'Complete';
+            tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
             saveTasksToLocalStorage();
             showTasks();
         }
@@ -335,11 +344,11 @@
             tasks.splice(index, 1);
             saveTasksToLocalStorage();
             showTasks();
+            showModal('Task deleted successfully!');
         }
 
         document.getElementById('toggle-form').addEventListener('click', () => {
-            const taskForm = document.getElementById('task-form');
-            taskForm.style.display = taskForm.style.display === 'none' ? 'block' : 'none';
+            taskForm.style.display = taskForm.style.display === 'none' || taskForm.style.display === '' ? 'block' : 'none';
         });
 
         document.getElementById('save-task').addEventListener('click', () => {
@@ -348,22 +357,21 @@
             const details = document.getElementById('details').value.trim();
 
             if (!subject || !chapter || !details) {
-                alert('Please fill in all fields!');
+                showModal('Please fill in all fields!');
                 return;
             }
 
-            tasks.push({ subject, chapter, details, status: 'Incomplete' });
+            tasks.unshift({ subject, chapter, details, status: 'Remaining' });
             saveTasksToLocalStorage();
             showTasks();
+            showModal('Task added successfully!');
+            taskForm.style.display = 'none';
             document.getElementById('subject').value = '';
             document.getElementById('chapter').value = '';
             document.getElementById('details').value = '';
         });
 
-        window.onload = () => {
-            askUserName();
-            showTasks();
-        };
+        showTasks();
     </script>
 </body>
 </html>
