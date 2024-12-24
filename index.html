@@ -266,29 +266,12 @@
 </div>
 
 <script>
-    // Preloaded task data from your previous input
-    const preloadedTasks = [
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'স্থির তড়িৎ', details: 'যারক', status: 'Remaining' },
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান', details: 'Running', status: 'Remaining' },
-        { subject: 'পদার্থবিজ্ঞান ২য় পত্র', chapter: 'সেমিকন্ডাক্টর ও ইলেকট্রনিক্স', details: 'CO-MCQ', status: 'Complete' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'পরিবেশ রসায়ন', details: 'মতবাদ এক বিক্রিয়া', status: 'Complete' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'জৈব রসায়ন', details: 'Running', status: 'Remaining' },
-        { subject: 'রসায়ন ২য় পত্র', chapter: 'পরিমাণগত রসায়ন', details: 'CO-MCQ', status: 'Complete' },
-        { subject: 'উচ্চতর গণিত ২য় পত্র', chapter: 'স্থিতি বিদ্যা', details: 'সম্পূর্ণ', status: 'Complete' },
-        { subject: 'উচ্চতর গণিত ২য় পত্র', chapter: 'সমতলে বস্তুর গতিবিধি', details: 'সম্পূর্ণ', status: 'Complete' },
-        { subject: 'প্রাণিবিজ্ঞান', chapter: 'চলন ও অঙ্গ চালনা', details: 'Running', status: 'Remaining' },
-        { subject: 'প্রাণিবিজ্ঞান', chapter: 'জিনতত্ত্ব ও বিবর্তন', details: 'Running', status: 'Remaining' }
-    ];
-
-    // Save preloaded data to localStorage
-    function saveTasks(tasks) {
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
 
     // Load tasks from localStorage
     function loadTasks() {
         const tasks = localStorage.getItem('tasks');
-        return tasks ? JSON.parse(tasks) : preloadedTasks; // Load preloaded data if no tasks are in localStorage
+        tasks=JSON.parse(tasks);
+        return tasks ;
     }
 
     // Show tasks in the table
