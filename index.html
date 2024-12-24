@@ -212,7 +212,7 @@
         }
 
         document.getElementById('toggle-form').addEventListener('click', () => {
-            taskForm.classList.toggle('hidden');
+            taskForm.style.display = taskForm.style.display === 'none' || !taskForm.style.display ? 'flex' : 'none';
         });
 
         document.getElementById('save-task').addEventListener('click', () => {
@@ -223,7 +223,7 @@
             if (subject && chapter && details) {
                 tasks.push({ subject, chapter, details, status: 'Remaining' });
                 showTasks();
-                taskForm.classList.add('hidden');
+                taskForm.style.display = 'none';
                 document.getElementById('subject').value = '';
                 document.getElementById('chapter').value = '';
                 document.getElementById('details').value = '';
