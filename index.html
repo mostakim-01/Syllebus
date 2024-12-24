@@ -51,6 +51,24 @@
         .status-complete {
             color: blue;
         }
+        input {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +76,17 @@
         <h1>Task List</h1>
     </header>
     <div class="container">
-        <table>
+        <!-- Form to Add New Task -->
+        <h2>Add New Task</h2>
+        <form id="task-form">
+            <input type="text" id="subject" placeholder="Subject" required>
+            <input type="text" id="chapter" placeholder="Chapter" required>
+            <input type="text" id="status" placeholder="Status (e.g., Running, Complete)" required>
+            <button type="submit">Add Task</button>
+        </form>
+        
+        <!-- Table for Displaying Tasks -->
+        <table id="task-table">
             <thead>
                 <tr>
                     <th>Subject</th>
@@ -68,57 +96,52 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td>স্থির তড়িৎ</td>
-                    <td class="status-running">যারক</td>
+                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td contenteditable="true">স্থির তড়িৎ</td>
+                    <td contenteditable="true" class="status-running">যারক</td>
                 </tr>
                 <tr>
-                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td>পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান</td>
-                    <td class="status-running">Running</td>
+                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td contenteditable="true">পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান</td>
+                    <td contenteditable="true" class="status-running">Running</td>
                 </tr>
                 <tr>
-                    <td>পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td>সেমিকন্ডাক্টর ও ইলেকট্রনিক্স</td>
-                    <td class="status-complete">CO-MCQ</td>
-                </tr>
-                <tr>
-                    <td>রসায়ন ২য় পত্র</td>
-                    <td>পরিবেশ রসায়ন</td>
-                    <td class="status-complete">মতবাদ এক বিক্রিয়া</td>
-                </tr>
-                <tr>
-                    <td>রসায়ন ২য় পত্র</td>
-                    <td>জৈব রসায়ন</td>
-                    <td class="status-running">Running</td>
-                </tr>
-                <tr>
-                    <td>রসায়ন ২য় পত্র</td>
-                    <td>পরিমাণগত রসায়ন</td>
-                    <td class="status-complete">CO-MCQ</td>
-                </tr>
-                <tr>
-                    <td>উচ্চতর গণিত ২য় পত্র</td>
-                    <td>স্থিতি বিদ্যা</td>
-                    <td class="status-complete">সম্পূর্ণ</td>
-                </tr>
-                <tr>
-                    <td>উচ্চতর গণিত ২য় পত্র</td>
-                    <td>সমতলে বস্তুর গতিবিধি</td>
-                    <td class="status-complete">সম্পূর্ণ</td>
-                </tr>
-                <tr>
-                    <td>প্রাণিবিজ্ঞান</td>
-                    <td>চলন ও অঙ্গ চালনা</td>
-                    <td class="status-running">Running</td>
-                </tr>
-                <tr>
-                    <td>প্রাণিবিজ্ঞান</td>
-                    <td>জিনতত্ত্ব ও বিবর্তন</td>
-                    <td class="status-running">Running</td>
+                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
+                    <td contenteditable="true">সেমিকন্ডাক্টর ও ইলেকট্রনিক্স</td>
+                    <td contenteditable="true" class="status-complete">CO-MCQ</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Function to add new task to the table
+        document.getElementById('task-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get values from the form inputs
+            const subject = document.getElementById('subject').value;
+            const chapter = document.getElementById('chapter').value;
+            const status = document.getElementById('status').value;
+
+            // Create a new table row
+            const newRow = document.createElement('tr');
+
+            // Create table cells for the new row
+            newRow.innerHTML = `
+                <td contenteditable="true">${subject}</td>
+                <td contenteditable="true">${chapter}</td>
+                <td contenteditable="true" class="status-${status.toLowerCase()}">${status}</td>
+            `;
+
+            // Append the new row to the table
+            document.querySelector('#task-table tbody').appendChild(newRow);
+
+            // Clear the form inputs
+            document.getElementById('subject').value = '';
+            document.getElementById('chapter').value = '';
+            document.getElementById('status').value = '';
+        });
+    </script>
 </body>
 </html>
