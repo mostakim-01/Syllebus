@@ -72,6 +72,11 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         th, td {
             padding: 12px;
@@ -120,6 +125,27 @@
         }
         .hidden {
             display: none;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .task-form {
+                gap: 8px;
+            }
+            .task-form input, .task-form button {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .navbar button {
+                width: 100%;
+            }
+            table {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
@@ -253,55 +279,44 @@
         row.querySelector('.save-btn').classList.remove('hidden');
     }
 
-    // Save edited task
+    // Save task
     function saveTask(index) {
         const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
-        const subject = row.querySelectorAll('td')[0].innerText;
-        const chapter = row.querySelectorAll('td')[1].innerText;
-        const data = row.querySelectorAll('td')[2].innerText;
-        const status = row.querySelectorAll('td')[3].innerText;
+        const allTasks = loadTasks().allTasks;
+        const task = allTasks[index];
+        task.subject = row.querySelectorAll('td')[0].innerText;
+        task.chapter = row.querySelectorAll('td')[1].innerText;
+        task.data = row.querySelectorAll('td')[2].innerText;
 
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
-        const updatedTask = { subject, chapter, data, status };
+        saveTasks(allTasks, loadTasks().remainingTasks, loadTasks().completedTasks);
+        row.querySelector('.save-btn').classList.add('hidden');
+    }
 
-        allTasks[index] = updatedTask;
-        saveTasks(allTasks, remainingTasks, completedTasks);
+    // Toggle task status (Complete/Remaining)
+    function toggleTask(index) {
+        const allTasks = loadTasks().allTasks;
+        const task = allTasks[index];
+        task.status = task.status === 'Remaining' ? 'Complete' : 'Remaining';
+        saveTasks(allTasks, loadTasks().remainingTasks, loadTasks().completedTasks);
         showTasks('all');
     }
 
     // Delete task
     function deleteTask(index) {
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
-
+        const allTasks = loadTasks().allTasks;
+        const remainingTasks = loadTasks().remainingTasks;
+        const completedTasks = loadTasks().completedTasks;
+        
         allTasks.splice(index, 1);
+        remainingTasks.splice(index, 1);
+        completedTasks.splice(index, 1);
+        
         saveTasks(allTasks, remainingTasks, completedTasks);
         showTasks('all');
     }
 
-    // Toggle task completion
-    function toggleTask(index) {
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
-        const task = allTasks[index];
-
-        if (task.status === 'Complete') {
-            task.status = 'Remaining';
-            remainingTasks.push(task);
-            completedTasks.splice(index, 1);
-        } else {
-            task.status = 'Complete';
-            completedTasks.push(task);
-            remainingTasks.splice(index, 1);
-        }
-
-        saveTasks(allTasks, remainingTasks, completedTasks);
-        showTasks('all');
-    }
-
-    // Load the initial tasks when the page is ready
-    window.onload = function() {
-        showTasks('all');
-    };
-
+    // Load and display all tasks initially
+    showTasks('all');
 </script>
 
 </body>
