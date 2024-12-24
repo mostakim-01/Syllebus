@@ -1,223 +1,240 @@
-<style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #007bff;
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-        }
-        header h1 {
-            margin-left: 10px;
-            font-size: 1.8rem;
-        }
+/* styles.css */
 
-        /* Styled Add Task Button */
-        .add-task-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .add-task-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
 
-        /* Task Form */
-        .task-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            visibility: hidden;
-            height: 0;
-        }
-        .task-form.show {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-            height: auto;
-        }
-        .task-form input, .task-form button {
-            padding: 14px;
-            border-radius: 20px;
-            border: 2px solid #007bff;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
-        .task-form button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        .task-form input {
-            background-color: rgba(255, 255, 255, 0.3);
-            color: #333;
-        }
-        .task-form button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+}
 
-        /* Table Styles */
-        table {
-            width: 100%;
-            max-width: 1000px;
-            margin: 20px auto;
-            border-collapse: collapse;
-            overflow-x: auto;
-            display: block;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-            text-transform: uppercase;
-            font-size: 1rem;
-        }
-        td {
-            background-color: rgba(255, 255, 255, 0.2);
-            font-size: 0.9rem;
-        }
+header h1 {
+    margin-left: 10px;
+    font-size: 1.8rem;
+}
 
-        /* Row Hover Effect */
-        tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.2);
-            cursor: pointer;
-        }
+/* Styled Add Task Button */
+.add-task-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
 
-        .delete-btn, .toggle-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            font-size: 14px;
-            transition: all 0.3s ease-in-out;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-        .toggle-btn {
-            background-color: #17a2b8;
-        }
-        .toggle-btn:hover {
-            background-color: #138496;
-            transform: translateY(-2px);
-        }
+.add-task-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
 
-        /* Line-through for completed tasks */
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
 
-        /* Actions column increased width */
-        .actions-column {
-            width: 250px;
-        }
+/* Task Form */
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
+    height: 0;
+}
 
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
+.task-form.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    height: auto;
+}
 
-            .task-form input, .task-form button {
-                font-size: 14px;
-                padding: 12px;
-            }
+.task-form input, .task-form button {
+    padding: 14px;
+    border-radius: 20px;
+    border: 2px solid #007bff;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
 
-            table {
-                max-width: 100%;
-                margin: 0;
-            }
+.task-form button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
 
-            header h1 {
-                font-size: 1.4rem;
-            }
+.task-form input {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #333;
+}
 
-            .add-task-btn {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
+.task-form button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
 
-            th, td {
-                font-size: 0.8rem;
-            }
+/* Table Styles */
+table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-            .delete-btn, .toggle-btn {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
+th, td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
 
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.2rem;
-            }
+th {
+    background-color: #007bff;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
 
-            .add-task-btn {
-                font-size: 12px;
-                padding: 8px 16px;
-            }
+td {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+}
 
-            .task-form input, .task-form button {
-                font-size: 12px;
-                padding: 10px;
-            }
+/* Row Hover Effect */
+tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.2);
+    cursor: pointer;
+}
 
-            th, td {
-                font-size: 0.75rem;
-                padding: 10px;
-            }
+.delete-btn, .toggle-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
 
-            .delete-btn, .toggle-btn {
-                font-size: 10px;
-                padding: 5px 10px;
-            }
-        }
-    </style>
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.toggle-btn {
+    background-color: #17a2b8;
+}
+
+.toggle-btn:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
+}
+
+/* Line-through for completed tasks */
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+/* Actions column increased width */
+.actions-column {
+    width: 250px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .task-form input, .task-form button {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    table {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .add-task-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    th, td {
+        font-size: 0.8rem;
+    }
+
+    .delete-btn, .toggle-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    .add-task-btn {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+
+    .task-form input, .task-form button {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    th, td {
+        font-size: 0.75rem;
+        padding: 10px;
+    }
+
+    .delete-btn, .toggle-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+}
