@@ -27,6 +27,23 @@
         header h1 {
             margin-left: 10px;
         }
+
+        /* Styled Add Task Button */
+        .add-task-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .add-task-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -37,11 +54,19 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        /* Task Form */
         .task-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease-in-out;
+        }
+        .task-form.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         .task-form input, .task-form button {
             padding: 12px;
@@ -146,6 +171,11 @@
             color: gray;
         }
 
+        /* Actions column increased width */
+        .actions-column {
+            width: 250px;
+        }
+
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .task-form {
@@ -186,7 +216,7 @@
                 <th>Chapter Details</th>
                 <th>Additional Data</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th class="actions-column">Actions</th>
             </tr>
         </thead>
         <tbody id="task-body">
@@ -235,7 +265,7 @@
                 <td contenteditable="false" class="${rowClass}">${task.chapter}</td>
                 <td contenteditable="false" class="${rowClass}">${task.data}</td>
                 <td class="status-${task.status.toLowerCase()} ${rowClass}">${task.status}</td>
-                <td>
+                <td class="actions-column">
                     <button class="edit-btn" onclick="editTask(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
                     <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Status</button>
@@ -268,56 +298,16 @@
 
         // Change button to Save
         const saveBtn = document.querySelectorAll('.save-btn')[index];
-        saveBtn.classList.remove('hidden');
     }
 
-    // Save edited task
-    function saveTask(index) {
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-
-        // Get updated values from form
-        task.subject = document.getElementById('subject').value;
-        task.chapter = document.getElementById('chapter').value;
-        task.data = document.getElementById('data').value;
-
-        // Save changes
-        saveTasks(allTasks);
-        showTasks();
-    }
-
-    // Delete task
-    function deleteTask(index) {
-        const allTasks = loadTasks();
-        allTasks.splice(index, 1);
-        saveTasks(allTasks);
-        showTasks();
-    }
-
-    // Add new task
-    document.getElementById('add-task').addEventListener('click', function() {
-        const newSubject = document.getElementById('subject').value;
-        const newChapter = document.getElementById('chapter').value;
-        const newData = document.getElementById('data').value;
-
-        const allTasks = loadTasks();
-        allTasks.push({ subject: newSubject, chapter: newChapter, data: newData, status: 'Remaining' });
-
-        saveTasks(allTasks);
-        showTasks();
-
-        // Clear form and hide it
-        document.getElementById('task-form').reset();
-        document.getElementById('task-form').classList.add('hidden');
-    });
-
-    // Toggle form visibility
+    // Toggle the form visibility with transition effect
     document.getElementById('toggle-form').addEventListener('click', function() {
         const form = document.getElementById('task-form');
+        form.classList.toggle('show');
         form.classList.toggle('hidden');
     });
 
-    // Initial call to display tasks
+    // Initialize tasks on page load
     showTasks();
 </script>
 
