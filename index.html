@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List</title>
+    <title>Task List Manager</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f7f6;
-            margin: 0;
-            padding: 0;
             color: #333;
+            line-height: 1.6;
         }
         header {
             background-color: #007bff;
@@ -19,7 +23,7 @@
             text-align: center;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
@@ -27,10 +31,12 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
+
         .task-form {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-bottom: 20px;
         }
         .task-form input, .task-form button {
             padding: 12px;
@@ -50,6 +56,8 @@
         .task-form button:hover {
             background-color: #0056b3;
         }
+        
+        /* Navbar Styles */
         .navbar {
             display: flex;
             justify-content: space-around;
@@ -59,38 +67,47 @@
             padding: 10px 20px;
             border: 2px solid #007bff;
             background: rgba(255, 255, 255, 0.1);
-            color: #007bff; /* Default text color */
+            color: #007bff;
             border-radius: 8px;
             cursor: pointer;
             transition: color 0.3s, background-color 0.3s;
         }
         .navbar button:hover {
             background-color: #007bff;
-            color: white; /* Hover text color */
+            color: white;
         }
+
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            max-height: 400px;
-            overflow-y: auto;
+            overflow-x: auto;
             display: block;
             border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
-            border: 2px solid #ddd;
+            border: 1px solid #ddd;
             border-radius: 8px;
         }
         th {
             background-color: #007bff;
             color: white;
+            text-transform: uppercase;
         }
         td {
             background-color: rgba(255, 255, 255, 0.2);
         }
+
+        /* Row Hover Effect */
+        tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.2);
+            cursor: pointer;
+        }
+
         .edit-btn, .delete-btn, .save-btn, .toggle-btn {
             padding: 8px 12px;
             border: none;
@@ -123,6 +140,7 @@
         .toggle-btn:hover {
             background-color: #138496;
         }
+
         .hidden {
             display: none;
         }
@@ -144,7 +162,7 @@
                 width: 100%;
             }
             table {
-                max-height: 300px;
+                max-height: 400px;
             }
         }
     </style>
@@ -246,7 +264,7 @@
                 <td>
                     <button class="edit-btn" onclick="editTask(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                    <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Complete</button>
+                    <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Status</button>
                     <button class="save-btn hidden" onclick="saveTask(${index})">Save</button>
                 </td>
             `;
@@ -254,29 +272,42 @@
         });
     }
 
-    // Add new task
-    document.getElementById('add-task').addEventListener('click', function () {
-        const subject = document.getElementById('subject').value;
-        const chapter = document.getElementById('chapter').value;
-        const data = document.getElementById('data').value;
-
-        const newTask = { subject, chapter, data, status: "Remaining" };
+    // Toggle task status
+    function toggleTask(index) {
         const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const task = allTasks[index];
+        task.status = task.status === 'Remaining' ? 'Complete' : 'Remaining';
 
-        allTasks.push(newTask);
-        remainingTasks.push(newTask);
+        if (task.status === 'Complete') {
+            remainingTasks.splice(index, 1);
+            completedTasks.push(task);
+        } else {
+            completedTasks.splice(index, 1);
+            remainingTasks.push(task);
+        }
 
         saveTasks(allTasks, remainingTasks, completedTasks);
         showTasks('all');
-    });
+    }
+
+    // Delete task
+    function deleteTask(index) {
+        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        allTasks.splice(index, 1);
+        remainingTasks.splice(index, 1);
+        completedTasks.splice(index, 1);
+
+        saveTasks(allTasks, remainingTasks, completedTasks);
+        showTasks('all');
+    }
 
     // Edit task
     function editTask(index) {
         const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
-        row.querySelectorAll('td')[0].setAttribute('contenteditable', 'true');
-        row.querySelectorAll('td')[1].setAttribute('contenteditable', 'true');
-        row.querySelectorAll('td')[2].setAttribute('contenteditable', 'true');
-        row.querySelector('.save-btn').classList.remove('hidden');
+        const buttons = row.querySelectorAll('button');
+        buttons.forEach(button => button.classList.toggle('hidden'));
+
+        row.querySelectorAll('td').forEach(cell => cell.contentEditable = 'true');
     }
 
     // Save task
@@ -292,30 +323,29 @@
         row.querySelector('.save-btn').classList.add('hidden');
     }
 
-    // Toggle task status (Complete/Remaining)
-    function toggleTask(index) {
-        const allTasks = loadTasks().allTasks;
-        const task = allTasks[index];
-        task.status = task.status === 'Remaining' ? 'Complete' : 'Remaining';
-        saveTasks(allTasks, loadTasks().remainingTasks, loadTasks().completedTasks);
-        showTasks('all');
-    }
+    // Add new task
+    document.getElementById('add-task').addEventListener('click', () => {
+        const subject = document.getElementById('subject').value;
+        const chapter = document.getElementById('chapter').value;
+        const data = document.getElementById('data').value;
 
-    // Delete task
-    function deleteTask(index) {
-        const allTasks = loadTasks().allTasks;
-        const remainingTasks = loadTasks().remainingTasks;
-        const completedTasks = loadTasks().completedTasks;
-        
-        allTasks.splice(index, 1);
-        remainingTasks.splice(index, 1);
-        completedTasks.splice(index, 1);
-        
-        saveTasks(allTasks, remainingTasks, completedTasks);
-        showTasks('all');
-    }
+        if (subject && chapter && data) {
+            const { allTasks, remainingTasks, completedTasks } = loadTasks();
+            const newTask = { subject, chapter, data, status: 'Remaining' };
 
-    // Load and display all tasks initially
+            allTasks.push(newTask);
+            remainingTasks.push(newTask);
+
+            saveTasks(allTasks, remainingTasks, completedTasks);
+            showTasks('all');
+
+            document.getElementById('subject').value = '';
+            document.getElementById('chapter').value = '';
+            document.getElementById('data').value = '';
+        }
+    });
+
+    // Initial load
     showTasks('all');
 </script>
 
