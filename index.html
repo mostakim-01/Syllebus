@@ -10,11 +10,11 @@
             background-color: #f4f7f6;
             margin: 0;
             padding: 0;
-            color: #333; /* Text color */
+            color: #333;
         }
         header {
-            background-color: #007bff; /* Blue background */
-            color: white; /* White text */
+            background-color: #007bff;
+            color: white;
             padding: 15px;
             text-align: center;
         }
@@ -45,30 +45,29 @@
         }
         .task-form input {
             background-color: rgba(255, 255, 255, 0.3);
-            color: #333; /* Darker text for inputs */
+            color: #333;
         }
         .task-form button:hover {
             background-color: #0056b3;
         }
-            /* Navbar Style */
-    .navbar {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 20px;
-    }
-    .navbar button {
-        padding: 10px 20px;
-        border: 2px solid #007bff;
-        background: rgba(255, 255, 255, 0.1);
-        color: #007bff; /* Default blue text */
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease; /* Smooth transition */
-    }
-    .navbar button:hover {
-        background-color: #007bff; /* Blue background on hover */
-        color: white; /* White text on hover */
-    }
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .navbar button {
+            padding: 10px 20px;
+            border: 2px solid #007bff;
+            background: rgba(255, 255, 255, 0.1);
+            color: #007bff; /* Default text color */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: color 0.3s, background-color 0.3s;
+        }
+        .navbar button:hover {
+            background-color: #007bff;
+            color: white; /* Hover text color */
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -165,9 +164,23 @@
 </div>
 
 <script>
+    // Default JSON data (your previous tasks)
+    const initialData = [
+        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "স্থির তড়িৎ", data: "যারক", status: "Remaining" },
+        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান", data: "Running", status: "Remaining" },
+        { subject: "পদার্থবিজ্ঞান ২য় পত্র", chapter: "সেমিকন্ডাক্টর ও ইলেকট্রনিক্স", data: "CO-MCQ", status: "Complete" },
+        { subject: "রসায়ন ২য় পত্র", chapter: "পরিবেশ রসায়ন", data: "মতবাদ এক বিক্রিয়া", status: "Complete" },
+        { subject: "রসায়ন ২য় পত্র", chapter: "জৈব রসায়ন", data: "Running", status: "Remaining" },
+        { subject: "রসায়ন ২য় পত্র", chapter: "পরিমাণগত রসায়ন", data: "CO-MCQ", status: "Complete" },
+        { subject: "উচ্চতর গণিত ২য় পত্র", chapter: "স্থিতি বিদ্যা", data: "সম্পূর্ণ", status: "Complete" },
+        { subject: "উচ্চতর গণিত ২য় পত্র", chapter: "সমতলে বস্তুর গতিবিধি", data: "সম্পূর্ণ", status: "Complete" },
+        { subject: "প্রাণিবিজ্ঞান", chapter: "চলন ও অঙ্গ চালনা", data: "Running", status: "Remaining" },
+        { subject: "প্রাণিবিজ্ঞান", chapter: "জিনতত্ত্ব ও বিবর্তন", data: "Running", status: "Remaining" }
+    ];
+
     // Load tasks from localStorage
     function loadTasks() {
-        const allTasks = localStorage.getItem('allTasks') ? JSON.parse(localStorage.getItem('allTasks')) : [];
+        const allTasks = localStorage.getItem('allTasks') ? JSON.parse(localStorage.getItem('allTasks')) : initialData;
         const remainingTasks = localStorage.getItem('remainingTasks') ? JSON.parse(localStorage.getItem('remainingTasks')) : [];
         const completedTasks = localStorage.getItem('completedTasks') ? JSON.parse(localStorage.getItem('completedTasks')) : [];
 
