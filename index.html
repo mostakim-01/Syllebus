@@ -17,10 +17,15 @@
             line-height: 1.6;
         }
         header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: #007bff;
             color: white;
             padding: 15px;
-            text-align: center;
+        }
+        header h1 {
+            margin-left: 10px;
         }
         .container {
             max-width: 1200px;
@@ -66,6 +71,8 @@
             display: block;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
         }
         th, td {
             padding: 15px;
@@ -150,11 +157,12 @@
 
 <header>
     <h1>Task List Manager</h1>
+    <button id="toggle-form" class="add-task-btn">Add Task</button>
 </header>
 
 <div class="container">
     <!-- Task Form -->
-    <div class="task-form">
+    <div class="task-form" id="task-form">
         <h2>Add New Task</h2>
         <input type="text" id="subject" placeholder="Subject" required>
         <input type="text" id="chapter" placeholder="Chapter Details" required>
@@ -208,7 +216,6 @@
     // Show tasks in table
     function showTasks() {
         const allTasks = loadTasks();
-        const taskTable = document.getElementById('task-table');
         const taskBody = document.getElementById('task-body');
         taskBody.innerHTML = '';
 
@@ -241,6 +248,36 @@
         showTasks();
     }
 
+    // Edit task
+    function editTask(index) {
+        const allTasks = loadTasks();
+        const task = allTasks[index];
+
+        // Fill form with task details
+        document.getElementById('subject').value = task.subject;
+        document.getElementById('chapter').value = task.chapter;
+        document.getElementById('data').value = task.data;
+
+        // Change button to Save
+        const saveBtn = document.querySelectorAll('.save-btn')[index];
+        saveBtn.classList.remove('hidden');
+    }
+
+    // Save edited task
+    function saveTask(index) {
+        const allTasks = loadTasks();
+        const task = allTasks[index];
+
+        // Get updated values from form
+        task.subject = document.getElementById('subject').value;
+        task.chapter = document.getElementById('chapter').value;
+        task.data = document.getElementById('data').value;
+
+        // Save changes
+        saveTasks(allTasks);
+        showTasks();
+    }
+
     // Delete task
     function deleteTask(index) {
         const allTasks = loadTasks();
@@ -249,58 +286,29 @@
         showTasks();
     }
 
-    // Edit task
-    function editTask(index) {
-        const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
-        const buttons = row.querySelectorAll('button');
-        buttons.forEach(button => button.classList.toggle('hidden'));
-
-        row.querySelectorAll('td').forEach(cell => {
-            cell.contentEditable = 'true';
-            cell.classList.add('editable');
-        });
-    }
-
-    // Save task
-    function saveTask(index) {
-        const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-        task.subject = row.querySelectorAll('td')[0].innerText;
-        task.chapter = row.querySelectorAll('td')[1].innerText;
-        task.data = row.querySelectorAll('td')[2].innerText;
-
-        saveTasks(allTasks);
-        row.querySelectorAll('td').forEach(cell => {
-            cell.contentEditable = 'false';
-            cell.classList.remove('editable');
-        });
-
-        row.querySelector('.save-btn').classList.add('hidden');
-        row.querySelector('.edit-btn').classList.remove('hidden');
-    }
-
     // Add new task
-    document.getElementById('add-task').addEventListener('click', () => {
+    document.getElementById('add-task').addEventListener('click', function() {
         const subject = document.getElementById('subject').value;
         const chapter = document.getElementById('chapter').value;
         const data = document.getElementById('data').value;
 
         if (subject && chapter && data) {
             const allTasks = loadTasks();
-            const newTask = { subject, chapter, data, status: 'Remaining' };
-            allTasks.push(newTask);
+            allTasks.push({ subject, chapter, data, status: 'Remaining' });
 
             saveTasks(allTasks);
             showTasks();
-
-            document.getElementById('subject').value = '';
-            document.getElementById('chapter').value = '';
-            document.getElementById('data').value = '';
+            document.getElementById('task-form').reset();
         }
     });
 
-    // Initial load
+    // Toggle the form visibility
+    document.getElementById('toggle-form').addEventListener('click', function() {
+        const form = document.getElementById('task-form');
+        form.classList.toggle('hidden');
+    });
+
+    // Initial load of tasks
     showTasks();
 </script>
 
