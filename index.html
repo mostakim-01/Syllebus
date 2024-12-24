@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -307,8 +307,14 @@
             if (username) {
                 localStorage.setItem('username', username);
                 userNameElement.textContent = `Welcome, ${username}`;
-                nameInputModal.style.display = 'none'; // Hide the name input modal
-                showTasks();
+                // Hide the name input modal smoothly using CSS
+                nameInputModal.classList.remove('active');
+                // Ensure the modal fades out properly by applying the correct styles
+                setTimeout(() => {
+                    nameInputModal.style.visibility = 'hidden';
+                    nameInputModal.style.opacity = '0';
+                }, 300); // Wait for the fade-out transition
+                showTasks(); // Show tasks once the name is saved
             } else {
                 alert("Please enter a valid name.");
             }
@@ -320,7 +326,10 @@
                 userNameElement.textContent = `Welcome, ${username}`;
                 showTasks();
             } else {
-                nameInputModal.style.display = 'flex'; // Show name input modal if not set
+                // Show the name input modal if no username is set
+                nameInputModal.style.visibility = 'visible';
+                nameInputModal.style.opacity = '1';
+                nameInputModal.classList.add('active');
             }
         };
 
