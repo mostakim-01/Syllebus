@@ -135,6 +135,11 @@
             background-color: #138496;
             transform: translateY(-2px);
         }
+
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
     </style>
 </head>
 <body>
@@ -191,12 +196,14 @@
             noTasksMessage.classList.add('hidden');
             taskList.innerHTML = '';
 
-            tasks.forEach((task, index) => {
+            const sortedTasks = tasks.sort((a, b) => a.status === 'Complete' ? 1 : -1);
+
+            sortedTasks.forEach((task, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${task.subject}</td>
-                    <td>${task.chapter}</td>
-                    <td>${task.details}</td>
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.subject}</td>
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.chapter}</td>
+                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.details}</td>
                     <td>${task.status}</td>
                     <td>
                         <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
@@ -234,7 +241,7 @@
                 return;
             }
 
-            tasks.push({ subject, chapter, details, status: 'Remaining' });
+            tasks.unshift({ subject, chapter, details, status: 'Remaining' });
             saveTasksToLocalStorage();
             showTasks();
             alert('Task added successfully!');
