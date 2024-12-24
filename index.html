@@ -56,26 +56,6 @@
         .task-form button:hover {
             background-color: #0056b3;
         }
-        
-        /* Navbar Styles */
-        .navbar {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-        .navbar button {
-            padding: 10px 20px;
-            border: 2px solid #007bff;
-            background: rgba(255, 255, 255, 0.1);
-            color: #007bff;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: color 0.3s, background-color 0.3s;
-        }
-        .navbar button:hover {
-            background-color: #007bff;
-            color: white;
-        }
 
         /* Table Styles */
         table {
@@ -145,6 +125,12 @@
             display: none;
         }
 
+        /* Line-through for completed tasks */
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .task-form {
@@ -153,13 +139,6 @@
             .task-form input, .task-form button {
                 font-size: 14px;
                 padding: 10px;
-            }
-            .navbar {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .navbar button {
-                width: 100%;
             }
             table {
                 max-height: 400px;
@@ -181,13 +160,6 @@
         <input type="text" id="chapter" placeholder="Chapter Details" required>
         <input type="text" id="data" placeholder="Additional Data" required>
         <button id="add-task">Add Task</button>
-    </div>
-
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <button id="all-tasks" onclick="showTasks('all')">All Tasks</button>
-        <button id="remaining-tasks" onclick="showTasks('remaining')">Remaining Tasks</button>
-        <button id="completed-tasks" onclick="showTasks('completed')">Completed Tasks</button>
     </div>
 
     <!-- Task Table -->
@@ -225,42 +197,29 @@
     // Load tasks from localStorage
     function loadTasks() {
         const allTasks = localStorage.getItem('allTasks') ? JSON.parse(localStorage.getItem('allTasks')) : initialData;
-        const remainingTasks = localStorage.getItem('remainingTasks') ? JSON.parse(localStorage.getItem('remainingTasks')) : [];
-        const completedTasks = localStorage.getItem('completedTasks') ? JSON.parse(localStorage.getItem('completedTasks')) : [];
-
-        return { allTasks, remainingTasks, completedTasks };
+        return allTasks;
     }
 
     // Save tasks to localStorage
-    function saveTasks(allTasks, remainingTasks, completedTasks) {
+    function saveTasks(allTasks) {
         localStorage.setItem('allTasks', JSON.stringify(allTasks));
-        localStorage.setItem('remainingTasks', JSON.stringify(remainingTasks));
-        localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
     }
 
     // Show tasks in table
-    function showTasks(category) {
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+    function showTasks() {
+        const allTasks = loadTasks();
         const taskTable = document.getElementById('task-table');
         const taskBody = document.getElementById('task-body');
         taskBody.innerHTML = '';
 
-        let tasks = [];
-        if (category === 'remaining') {
-            tasks = remainingTasks;
-        } else if (category === 'completed') {
-            tasks = completedTasks;
-        } else {
-            tasks = allTasks;
-        }
-
-        tasks.forEach((task, index) => {
+        allTasks.forEach((task, index) => {
             const row = document.createElement('tr');
+            const rowClass = task.status === "Complete" ? "completed" : "";
             row.innerHTML = `
-                <td contenteditable="true">${task.subject}</td>
-                <td contenteditable="true">${task.chapter}</td>
-                <td contenteditable="true">${task.data}</td>
-                <td class="status-${task.status.toLowerCase()}">${task.status}</td>
+                <td contenteditable="true" class="${rowClass}">${task.subject}</td>
+                <td contenteditable="true" class="${rowClass}">${task.chapter}</td>
+                <td contenteditable="true" class="${rowClass}">${task.data}</td>
+                <td class="status-${task.status.toLowerCase()} ${rowClass}">${task.status}</td>
                 <td>
                     <button class="edit-btn" onclick="editTask(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
@@ -274,31 +233,20 @@
 
     // Toggle task status
     function toggleTask(index) {
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const allTasks = loadTasks();
         const task = allTasks[index];
         task.status = task.status === 'Remaining' ? 'Complete' : 'Remaining';
 
-        if (task.status === 'Complete') {
-            remainingTasks.splice(index, 1);
-            completedTasks.push(task);
-        } else {
-            completedTasks.splice(index, 1);
-            remainingTasks.push(task);
-        }
-
-        saveTasks(allTasks, remainingTasks, completedTasks);
-        showTasks('all');
+        saveTasks(allTasks);
+        showTasks();
     }
 
     // Delete task
     function deleteTask(index) {
-        const { allTasks, remainingTasks, completedTasks } = loadTasks();
+        const allTasks = loadTasks();
         allTasks.splice(index, 1);
-        remainingTasks.splice(index, 1);
-        completedTasks.splice(index, 1);
-
-        saveTasks(allTasks, remainingTasks, completedTasks);
-        showTasks('all');
+        saveTasks(allTasks);
+        showTasks();
     }
 
     // Edit task
@@ -313,13 +261,13 @@
     // Save task
     function saveTask(index) {
         const row = document.querySelector(`#task-body tr:nth-child(${index + 1})`);
-        const allTasks = loadTasks().allTasks;
+        const allTasks = loadTasks();
         const task = allTasks[index];
         task.subject = row.querySelectorAll('td')[0].innerText;
         task.chapter = row.querySelectorAll('td')[1].innerText;
         task.data = row.querySelectorAll('td')[2].innerText;
 
-        saveTasks(allTasks, loadTasks().remainingTasks, loadTasks().completedTasks);
+        saveTasks(allTasks);
         row.querySelector('.save-btn').classList.add('hidden');
     }
 
@@ -330,14 +278,12 @@
         const data = document.getElementById('data').value;
 
         if (subject && chapter && data) {
-            const { allTasks, remainingTasks, completedTasks } = loadTasks();
+            const allTasks = loadTasks();
             const newTask = { subject, chapter, data, status: 'Remaining' };
-
             allTasks.push(newTask);
-            remainingTasks.push(newTask);
 
-            saveTasks(allTasks, remainingTasks, completedTasks);
-            showTasks('all');
+            saveTasks(allTasks);
+            showTasks();
 
             document.getElementById('subject').value = '';
             document.getElementById('chapter').value = '';
@@ -346,7 +292,7 @@
     });
 
     // Initial load
-    showTasks('all');
+    showTasks();
 </script>
 
 </body>
