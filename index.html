@@ -123,7 +123,7 @@
             cursor: pointer;
         }
 
-        .edit-btn, .delete-btn, .save-btn, .toggle-btn {
+        .delete-btn, .toggle-btn {
             padding: 8px 16px;
             border: none;
             border-radius: 10px;
@@ -132,25 +132,11 @@
             font-size: 14px;
             transition: all 0.3s ease-in-out;
         }
-        .edit-btn {
-            background-color: #28a745;
-        }
-        .edit-btn:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-        }
         .delete-btn {
             background-color: #dc3545;
         }
         .delete-btn:hover {
             background-color: #c82333;
-            transform: translateY(-2px);
-        }
-        .save-btn {
-            background-color: #ffc107;
-        }
-        .save-btn:hover {
-            background-color: #e0a800;
             transform: translateY(-2px);
         }
         .toggle-btn {
@@ -159,10 +145,6 @@
         .toggle-btn:hover {
             background-color: #138496;
             transform: translateY(-2px);
-        }
-
-        .hidden {
-            display: none;
         }
 
         /* Line-through for completed tasks */
@@ -261,15 +243,13 @@
             const row = document.createElement('tr');
             const rowClass = task.status === "Complete" ? "completed" : "";
             row.innerHTML = `
-                <td contenteditable="false" class="${rowClass}" id="subject-${index}">${task.subject}</td>
-                <td contenteditable="false" class="${rowClass}" id="chapter-${index}">${task.chapter}</td>
-                <td contenteditable="false" class="${rowClass}" id="data-${index}">${task.data}</td>
+                <td class="${rowClass}" id="subject-${index}">${task.subject}</td>
+                <td class="${rowClass}" id="chapter-${index}">${task.chapter}</td>
+                <td class="${rowClass}" id="data-${index}">${task.data}</td>
                 <td class="status-${task.status.toLowerCase()} ${rowClass}" id="status-${index}">${task.status}</td>
                 <td class="actions-column">
-                    <button class="edit-btn" onclick="editTask(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
                     <button class="toggle-btn" onclick="toggleTask(${index})">Toggle Status</button>
-                    <button class="save-btn hidden" id="save-btn-${index}" onclick="saveTask(${index})">Save</button>
                 </td>
             `;
             taskBody.appendChild(row);
@@ -300,31 +280,6 @@
             toggleForm(); // Hide form after adding
         }
     });
-
-    // Edit task
-    function editTask(index) {
-        const allTasks = loadTasks();
-        const task = allTasks[index];
-        document.getElementById('subject').value = task.subject;
-        document.getElementById('chapter').value = task.chapter;
-        document.getElementById('data').value = task.data;
-
-        const saveBtn = document.getElementById(`save-btn-${index}`);
-        saveBtn.classList.remove('hidden');
-    }
-
-    // Save edited task
-    function saveTask(index) {
-        const allTasks = loadTasks();
-        allTasks[index] = {
-            subject: document.getElementById('subject').value,
-            chapter: document.getElementById('chapter').value,
-            data: document.getElementById('data').value,
-            status: "Remaining"
-        };
-        saveTasks(allTasks);
-        showTasks();
-    }
 
     // Delete task
     function deleteTask(index) {
