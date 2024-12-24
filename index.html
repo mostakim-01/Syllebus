@@ -224,7 +224,33 @@
     </div>
 
     <div class="container">
-        <!-- Existing task management UI -->
+        <div class="summary-container">
+            <div class="summary" id="task-summary"></div>
+            <button id="toggle-form" class="save-task-btn">Add Task</button>
+        </div>
+
+        <div class="task-form" id="task-form">
+            <h2>Add Task</h2>
+            <input type="text" id="subject" placeholder="Subject">
+            <input type="text" id="chapter" placeholder="Chapter">
+            <input type="text" id="details" placeholder="Details">
+            <button id="save-task">Save Task</button>
+        </div>
+
+        <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
+
+        <table id="task-table" class="hidden">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Chapter</th>
+                    <th>Details</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="task-list"></tbody>
+        </table>
     </div>
 
     <script>
@@ -232,6 +258,8 @@
         const nameInput = document.getElementById('name-input');
         const nameSubmit = document.getElementById('name-submit');
         const userNameElement = document.getElementById('user-name');
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
         function askUserName() {
             const storedName = localStorage.getItem('username');
@@ -251,7 +279,91 @@
             }
         });
 
-        window.onload = askUserName;
+        function saveTasksToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function updateSummary() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.status === 'Complete').length;
+            const remainingTasks = totalTasks - completedTasks;
+
+            document.getElementById('task-summary').innerText = `Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks}`;
+        }
+
+        function showTasks() {
+            const taskTable = document.getElementById('task-table');
+            const noTasksMessage = document.getElementById('no-tasks-message');
+            const taskList = document.getElementById('task-list');
+
+            if (tasks.length === 0) {
+                taskTable.classList.add('hidden');
+                noTasksMessage.classList.remove('hidden');
+                document.getElementById('task-summary').innerText = '';
+                return;
+            }
+
+            taskTable.classList.remove('hidden');
+            noTasksMessage.classList.add('hidden');
+            taskList.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.subject}</td>
+                    <td>${task.chapter}</td>
+                    <td>${task.details}</td>
+                    <td>${task.status}</td>
+                    <td>
+                        <button onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Incomplete' : 'Mark as Complete'}</button>
+                        <button onclick="deleteTask(${index})">Delete</button>
+                    </td>
+                `;
+                taskList.appendChild(row);
+            });
+
+            updateSummary();
+        }
+
+        function toggleTask(index) {
+            tasks[index].status = tasks[index].status === 'Complete' ? 'Incomplete' : 'Complete';
+            saveTasksToLocalStorage();
+            showTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveTasksToLocalStorage();
+            showTasks();
+        }
+
+        document.getElementById('toggle-form').addEventListener('click', () => {
+            const taskForm = document.getElementById('task-form');
+            taskForm.style.display = taskForm.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('save-task').addEventListener('click', () => {
+            const subject = document.getElementById('subject').value.trim();
+            const chapter = document.getElementById('chapter').value.trim();
+            const details = document.getElementById('details').value.trim();
+
+            if (!subject || !chapter || !details) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            tasks.push({ subject, chapter, details, status: 'Incomplete' });
+            saveTasksToLocalStorage();
+            showTasks();
+            document.getElementById('subject').value = '';
+            document.getElementById('chapter').value = '';
+            document.getElementById('details').value = '';
+        });
+
+        window.onload = () => {
+            askUserName();
+            showTasks();
+        };
     </script>
 </body>
 </html>
