@@ -45,14 +45,16 @@
         }
         .task-form input, .task-form button {
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 20px;
             border: 2px solid #007bff;
             font-size: 16px;
+            transition: all 0.3s ease-in-out;
         }
         .task-form button {
             background-color: #007bff;
             color: white;
             cursor: pointer;
+            border-radius: 20px;
         }
         .task-form input {
             background-color: rgba(255, 255, 255, 0.3);
@@ -60,6 +62,7 @@
         }
         .task-form button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
         /* Table Styles */
@@ -96,36 +99,41 @@
         }
 
         .edit-btn, .delete-btn, .save-btn, .toggle-btn {
-            padding: 8px 12px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             color: white;
-            transition: all 0.3s;
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
         }
         .edit-btn {
             background-color: #28a745;
         }
         .edit-btn:hover {
             background-color: #218838;
+            transform: translateY(-2px);
         }
         .delete-btn {
             background-color: #dc3545;
         }
         .delete-btn:hover {
             background-color: #c82333;
+            transform: translateY(-2px);
         }
         .save-btn {
             background-color: #ffc107;
         }
         .save-btn:hover {
             background-color: #e0a800;
+            transform: translateY(-2px);
         }
         .toggle-btn {
             background-color: #17a2b8;
         }
         .toggle-btn:hover {
             background-color: #138496;
+            transform: translateY(-2px);
         }
 
         .hidden {
@@ -162,7 +170,7 @@
 
 <div class="container">
     <!-- Task Form -->
-    <div class="task-form" id="task-form">
+    <div class="task-form hidden" id="task-form">
         <h2>Add New Task</h2>
         <input type="text" id="subject" placeholder="Subject" required>
         <input type="text" id="chapter" placeholder="Chapter Details" required>
@@ -288,27 +296,28 @@
 
     // Add new task
     document.getElementById('add-task').addEventListener('click', function() {
-        const subject = document.getElementById('subject').value;
-        const chapter = document.getElementById('chapter').value;
-        const data = document.getElementById('data').value;
+        const newSubject = document.getElementById('subject').value;
+        const newChapter = document.getElementById('chapter').value;
+        const newData = document.getElementById('data').value;
 
-        if (subject && chapter && data) {
-            const allTasks = loadTasks();
-            allTasks.push({ subject, chapter, data, status: 'Remaining' });
+        const allTasks = loadTasks();
+        allTasks.push({ subject: newSubject, chapter: newChapter, data: newData, status: 'Remaining' });
 
-            saveTasks(allTasks);
-            showTasks();
-            document.getElementById('task-form').reset();
-        }
+        saveTasks(allTasks);
+        showTasks();
+
+        // Clear form and hide it
+        document.getElementById('task-form').reset();
+        document.getElementById('task-form').classList.add('hidden');
     });
 
-    // Toggle the form visibility
+    // Toggle form visibility
     document.getElementById('toggle-form').addEventListener('click', function() {
         const form = document.getElementById('task-form');
         form.classList.toggle('hidden');
     });
 
-    // Initial load of tasks
+    // Initial call to display tasks
     showTasks();
 </script>
 
