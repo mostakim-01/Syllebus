@@ -69,6 +69,17 @@
         button:hover {
             background-color: #0056b3;
         }
+        .edit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -84,7 +95,7 @@
             <input type="text" id="status" placeholder="Status (e.g., Running, Complete)" required>
             <button type="submit">Add Task</button>
         </form>
-        
+
         <!-- Table for Displaying Tasks -->
         <table id="task-table">
             <thead>
@@ -92,56 +103,136 @@
                     <th>Subject</th>
                     <th>Chapter</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td contenteditable="true">স্থির তড়িৎ</td>
-                    <td contenteditable="true" class="status-running">যারক</td>
-                </tr>
-                <tr>
-                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td contenteditable="true">পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান</td>
-                    <td contenteditable="true" class="status-running">Running</td>
-                </tr>
-                <tr>
-                    <td contenteditable="true">পদার্থবিজ্ঞান ২য় পত্র</td>
-                    <td contenteditable="true">সেমিকন্ডাক্টর ও ইলেকট্রনিক্স</td>
-                    <td contenteditable="true" class="status-complete">CO-MCQ</td>
-                </tr>
+            <tbody id="task-body">
+                <!-- Data will be loaded here dynamically -->
             </tbody>
         </table>
     </div>
 
     <script>
-        // Function to add new task to the table
-        document.getElementById('task-form').addEventListener('submit', function(event) {
+        // Sample Data
+        const initialData = [
+            {
+                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
+                "chapter": "স্থির তড়িৎ",
+                "status": "যারক"
+            },
+            {
+                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
+                "chapter": "পরমাণুর গঠন ও নিউক্লিয়ার পদার্থবিজ্ঞান",
+                "status": "Running"
+            },
+            {
+                "subject": "পদার্থবিজ্ঞান ২য় পত্র",
+                "chapter": "সেমিকন্ডাক্টর ও ইলেকট্রনিক্স",
+                "status": "CO-MCQ"
+            },
+            {
+                "subject": "রসায়ন ২য় পত্র",
+                "chapter": "পরিবেশ রসায়ন",
+                "status": "মতবাদ এক বিক্রিয়া"
+            },
+            {
+                "subject": "রসায়ন ২য় পত্র",
+                "chapter": "জৈব রসায়ন",
+                "status": "Running"
+            },
+            {
+                "subject": "রসায়ন ২য় পত্র",
+                "chapter": "পরিমাণগত রসায়ন",
+                "status": "CO-MCQ"
+            },
+            {
+                "subject": "উচ্চতর গণিত ২য় পত্র",
+                "chapter": "স্থিতি বিদ্যা",
+                "status": "সম্পূর্ণ"
+            },
+            {
+                "subject": "উচ্চতর গণিত ২য় পত্র",
+                "chapter": "সমতলে বস্তুর গতিবিধি",
+                "status": "সম্পূর্ণ"
+            },
+            {
+                "subject": "প্রাণিবিজ্ঞান",
+                "chapter": "চলন ও অঙ্গ চালনা",
+                "status": "Running"
+            },
+            {
+                "subject": "প্রাণিবিজ্ঞান",
+                "chapter": "জিনতত্ত্ব ও বিবর্তন",
+                "status": "Running"
+            }
+        ];
+
+        // Function to load tasks from localStorage
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem('tasks'));
+            if (!tasks) {
+                tasks = initialData;
+            }
+            const taskBody = document.getElementById('task-body');
+            taskBody.innerHTML = '';
+
+            tasks.forEach((task, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td contenteditable="true">${task.subject}</td>
+                    <td contenteditable="true">${task.chapter}</td>
+                    <td contenteditable="true" class="status-${task.status.toLowerCase()}">${task.status}</td>
+                    <td><button class="edit-btn" onclick="editTask(${index})">Edit</button></td>
+                `;
+                taskBody.appendChild(row);
+            });
+        }
+
+        // Save tasks to localStorage
+        function saveTasks(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Edit Task - Get the task and save the updated data
+        function editTask(index) {
+            const rows = document.querySelectorAll('#task-table tbody tr');
+            const row = rows[index];
+            const subject = row.children[0].innerText;
+            const chapter = row.children[1].innerText;
+            const status = row.children[2].innerText;
+
+            // Update data in the array
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || initialData;
+            tasks[index] = { subject, chapter, status };
+
+            // Save updated tasks to localStorage
+            saveTasks(tasks);
+            loadTasks(); // Reload the tasks
+        }
+
+        // Add new task
+        document.getElementById('task-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Get values from the form inputs
             const subject = document.getElementById('subject').value;
             const chapter = document.getElementById('chapter').value;
             const status = document.getElementById('status').value;
 
-            // Create a new table row
-            const newRow = document.createElement('tr');
+            const newTask = { subject, chapter, status };
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || initialData;
+            tasks.push(newTask);
 
-            // Create table cells for the new row
-            newRow.innerHTML = `
-                <td contenteditable="true">${subject}</td>
-                <td contenteditable="true">${chapter}</td>
-                <td contenteditable="true" class="status-${status.toLowerCase()}">${status}</td>
-            `;
-
-            // Append the new row to the table
-            document.querySelector('#task-table tbody').appendChild(newRow);
+            saveTasks(tasks);
+            loadTasks(); // Reload tasks
 
             // Clear the form inputs
             document.getElementById('subject').value = '';
             document.getElementById('chapter').value = '';
             document.getElementById('status').value = '';
         });
+
+        // Initial load of tasks
+        loadTasks();
     </script>
 </body>
 </html>
