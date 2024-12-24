@@ -84,6 +84,13 @@
             transform: translateY(-2px);
         }
 
+        .summary {
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -157,6 +164,10 @@
             <button id="save-task">সেভ করুন </button>
         </div>
 
+        <div class="summary" id="task-summary">
+            <!-- The summary will be updated dynamically -->
+        </div>
+
         <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
 
         <table id="task-table" class="hidden">
@@ -180,15 +191,25 @@
         const taskTable = document.getElementById('task-table');
         const noTasksMessage = document.getElementById('no-tasks-message');
         const taskList = document.getElementById('task-list');
+        const taskSummary = document.getElementById('task-summary');
 
         function saveTasksToLocalStorage() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function updateSummary() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.status === 'Complete').length;
+            const remainingTasks = totalTasks - completedTasks;
+
+            taskSummary.innerText = `Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks}`;
         }
 
         function showTasks() {
             if (tasks.length === 0) {
                 taskTable.classList.add('hidden');
                 noTasksMessage.classList.remove('hidden');
+                taskSummary.innerText = ''; // Clear the summary when there are no tasks
                 return;
             }
 
@@ -212,6 +233,8 @@
                 `;
                 taskList.appendChild(row);
             });
+
+            updateSummary();
         }
 
         function toggleTask(index) {
