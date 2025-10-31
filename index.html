@@ -1,119 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
+
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Happy Birthday — Shuvo 🎉</title>
-<meta name="theme-color" content="#ff9a9e"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg1:#ff9a9e; --bg2:#fad0c4; --accent:#ff4b2b; --muted:#666;
-    --card-bg:#fff; --card-radius:16px;
-  }
-  *{box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial;}
-  html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#111;overflow-x:hidden;}
-  body{transition:background 8s ease infinite;}
-  .wrap{max-width:480px;margin:18px auto;padding:14px;}
-  .card{background:var(--card-bg);border-radius:var(--card-radius);box-shadow:0 10px 30px rgba(10,20,40,0.12);overflow:hidden;margin-bottom:16px;position:relative;transition:transform 0.3s;}
-  .card:hover{transform:scale(1.02);}
-  .pad{padding:18px;}
-  h1{font-size:22px;margin:0 0 6px;color:var(--accent);letter-spacing:0.2px;}
-  p.lead{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.4;}
-  .btn{display:inline-block;padding:10px 16px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none;border:none;font-weight:600;cursor:pointer;transition:0.3s;}
-  .btn:hover{transform:scale(1.05);}
-  .btn.ghost{background:#fff;color:var(--accent);border:1px solid #f1b1a6;}
-  .center{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-  #memoryGrid{display:flex;flex-direction:column;gap:12px;padding:8px;}
-  .memory{background:linear-gradient(180deg,#fff,#fff);border-radius:12px;overflow:hidden;display:block;transform-origin:center;transition:transform .28s ease,opacity .28s ease;opacity:0;transform:translateY(10px) scale(.995);}
-  .memory.show{opacity:1;transform:translateY(0) scale(1);}
-  .memory img{width:100%;height:200px;object-fit:cover;background:#f4f6f8;display:block;}
-  .mem-body{padding:10px;}
-  .mem-title{font-weight:700;color:var(--accent);font-size:15px;margin-bottom:6px;}
-  .mem-text{font-size:14px;color:#333;line-height:1.35;margin-bottom:8px;}
-  .mem-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;}
-  .reactions{display:flex;gap:8px;}
-  .react{padding:6px 8px;border-radius:999px;background:#f6f7fb;border:1px solid #eee;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;position:relative;}
-  .react span.count{font-weight:700;color:#333;}
-  textarea{width:100%;min-height:80px;padding:10px;border-radius:10px;border:1px solid #eee;font-size:14px;resize:vertical;}
-  input.small{padding:8px;border-radius:10px;border:1px solid #eee;width:100%;}
-  .hint{font-size:12px;color:var(--muted);margin-top:6px;}
-  .balloon{position:fixed;bottom:-140px;width:36px;height:46px;border-radius:50%;pointer-events:auto;display:flex;align-items:center;justify-content:center;z-index:40;animation:sway 3s ease-in-out infinite alternate;}
-  .balloon::after{content:'';position:absolute;left:50%;bottom:-22px;width:2px;height:26px;background:rgba(0,0,0,0.08);transform:translateX(-50%);}
-  @keyframes sway{0%{transform:translateX(0);}100%{transform:translateX(6px);}}
-  #confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:5;}
-  .json-area{width:100%;height:120px;font-family:monospace;font-size:13px;padding:8px;border-radius:8px;border:1px dashed #e6e6e6;resize:vertical;}
-  .footer{font-size:12px;color:var(--muted);text-align:center;padding:10px;}
-  @media(max-width:480px){.wrap{padding:12px;margin:8px auto}.mem-body{padding:8px}.memory img{height:170px;}}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Happy Birthday — Shuvo 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #ff9a9e;
+            --bg2: #fad0c4;
+            --accent: #ff4b2b;
+            --muted: #666;
+            --card-radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2, #fcb69f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #111;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        .wrap {
+            max-width: 480px;
+            margin: 18px auto;
+            padding: 14px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--card-radius);
+            box-shadow: 0 0 40px rgba(255, 75, 43, 0.3);
+            overflow: hidden;
+            margin-bottom: 16px;
+            position: relative;
+            transition: transform 0.3s;
+            backdrop-filter: blur(8px);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .pad {
+            padding: 18px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 6px;
+            color: var(--accent);
+            letter-spacing: 0.2px;
+        }
+
+        p.lead {
+            margin: 0 0 12px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 6px 15px rgba(255, 75, 43, 0.4);
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(255, 75, 43, 0.5);
+        }
+
+        .center {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        #memoryGrid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 8px;
+        }
+
+        .memory {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            display: block;
+            transform-origin: center;
+            transition: transform .28s ease, opacity .28s ease, box-shadow .3s;
+            opacity: 0;
+            transform: translateY(10px) scale(.995);
+        }
+
+        .memory.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .memory img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f4f6f8;
+            display: block;
+        }
+
+
+        .memory:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 75, 43, 0.4);
+        }
+
+        .mem-body {
+            padding: 10px;
+        }
+
+        .mem-title {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .mem-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.35;
+            margin-bottom: 8px;
+        }
+
+        .balloon {
+            position: fixed;
+            bottom: -60px;
+            width: 36px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            animation: sway 3s ease-in-out infinite alternate;
+            opacity: 0.8;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -22px;
+            width: 2px;
+            height: 26px;
+            background: rgba(0, 0, 0, 0.08);
+            transform: translateX(-50%);
+        }
+
+        @keyframes sway {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(6px);
+            }
+        }
+
+        #confetti {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
+
+        @media(max-width:480px) {
+            .wrap {
+                padding: 12px;
+                margin: 8px auto
+            }
+
+            .mem-body {
+                padding: 8px
+            }
+
+            .memory img {
+                height: 170px
+            }
+        }
+
+        .letter {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+            filter: blur(6px);
+            transition: filter 0.6s ease, transform 0.6s ease;
+            cursor: pointer;
+            background: linear-gradient(to bottom, #fff 0%, #ffe4e1 100%);
+            padding: 12px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .letter.show {
+            filter: blur(0);
+            transform: scale(1.02);
+            cursor: default;
+        }
+
+        .letter:hover {
+            transform: scale(1.01);
+        }
+        
+        .countdown span {
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+            margin: 0 4px;
+            display: inline-block;
+        }
+    </style>
 </head>
+
 <body>
-<canvas id="confetti"></canvas>
-<div class="wrap">
-  <div class="card pad" role="banner" aria-label="Happy Birthday header">
-    <h1>🎉 Happy Birthday, Talha Jobayer Shuvo!</h1>
-    <p class="lead">From your roommate — Mostakim 💙<br>Two years of chaos, jokes, late-night walks, and steady help. This is for you.</p>
-    <div class="center">
-      <button class="btn" id="revealBtn">Reveal Surprise 🎁</button>
-      <button class="btn ghost" id="editToggle">Edit / Upload</button>
+    <audio id="bgMusic" loop>
+        <source
+            src="https://cdn.pixabay.com/download/audio/2025/04/30/audio_9834479b67.mp3?filename=happy-birthday-334876.mp3"
+            type="audio/mpeg">
+    </audio>
+
+    <canvas id="confetti"></canvas>
+    <div class="wrap">
+        <div class="card pad">
+            <!-- Profile picture at the top -->
+            <div style="text-align:center; margin-bottom:12px;">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczP8QHPNCapbDgNtlUeaVOnpq-rofjHhj4bPxymRPeTzHfSeaTux0nNijzvjtaPqQdAIJOgtGBTFOhgiI9w2Njb76fzlFZGG_ICsY2YvLzk04FQNbHNeMf_r94HQgsQ5NhnKfaohGKUEPA88AE3b6s_DsA=w484-h645-s-no-gm?authuser=0"
+                    alt="Shuvo"
+                    style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--accent);">
+            </div>
+
+            <!-- Heading -->
+            <h1 style="text-align:center;">🎉 শুভ জন্মদিন, শুভ </h1>
+            <p class="lead" style="text-align:center;">যে মুহূর্তগুলো হারিয়ে যায় না, সেগুলোই আমাদের স্মৃতি।</p>
+
+            <!-- Reveal button centered -->
+            <!-- <div style="display:flex; justify-content:center; margin-top:12px;">
+        <button class="btn" id="revealBtn">Reveal Surprise 🎁</button>
+    </div> -->
+
+            <!-- <p id="revealText" class="hint" style="margin-top:10px;font-weight:700; text-align:center;"></p> -->
+        </div>
+        <div class="card pad" style="text-align:center; margin-bottom:16px;">
+            <h2 style="font-size:16px; margin:0 0 8px;">🎂 Your Birthday Will Finish In:</h2>
+            <div class="countdown" style="font-size:18px; font-weight:600; color:var(--accent);">
+                
+                <span id="hours">00</span> ঘন্টা
+                <span id="minutes">00</span> মিনিট
+                <span id="seconds">00</span> সেকেন্ড
+            </div>
+        </div>
+
+
+        <div class="card pad">
+            <h2 style="font-size:16px;margin:0 0 8px">Memories & Moments</h2>
+            <div id="memoryGrid"></div>
+        </div>
+
+        <div class="card pad">
+            <p class="lead letter" id="birthdayLetter">
+                দেখতে দেখতে কেটে গেল দুই বছর… , <br>
+                মনে হয় গতকালই তো আমরা এলাম, তারপর একসাথে হাসি, গল্প আর ছোট ছোট রসিকতায় সময় কাটাচ্ছিলাম।<br>
+                এখন ভাবলে মনে হয়, এই বিশেষ মুহূর্তগুলো এখন প্রায় শেষ হতে চলেছে। হয়তো কিছুদিন পর আমাদের পথ আলাদা হবে,
+                কিন্তু এই সময়টা
+                আমাদের জীবনের অমূল্য স্মৃতি হয়ে থাকবে।<br>
+
+                রাত জেগে গল্প করা, একসাথে ঘুরে বেড়ানো, কখনো ছোটখাটো ঝগড়া আর তার পর হেসে ফেলা—সবই মনে পড়ে।
+                সেই সব মুহূর্তগুলো এখন শুধু স্মৃতি নয়, এগুলো আমাদের কাছে একটি উষ্ণ অনুভূতি হিসেবে রয়ে গেছে।
+                যখনই মনে পড়বে, মনে হবে আমরা তখন সত্যিই সুখী ছিলাম।<br>
+
+                আজ তোমার জন্মদিনে আমার একটাই আশা—তুমি হাসিমুখে থাকো, শান্তিতে থাকো, আর জীবনের অনেক বড় হও।<br>
+                                ইনশাআল্লাহ্ তুমি জীবনে ভালো কিছু করবে। আমার জন্যেও দোয়া করিও <br>
+
+
+
+                শুভ জন্মদিন! 🎉
+            </p>
+        </div>
+        <div style="display:flex; justify-content:center; margin-top:12px;">
+            <button class="btn" id="revealBtn">Reveal Surprise 🎁</button>
+        </div>
+        <p id="revealText" class="hint" style="margin-top:10px;font-weight:700; text-align:center;"></p>
+
+        <!-- <div class="card pad">
+            <p class="lead letter1" id="birthdayLetter1">
+                Sorry
+            </p>
+        </div> -->
+
+        <div class="footer">Made by Mostakim</div>
     </div>
-    <p id="revealText" class="hint" style="margin-top:10px;font-weight:700"></p>
-  </div>
 
-  <div class="card pad" aria-live="polite">
-    <h2 style="font-size:16px;margin:0 0 8px">Memories & Moments</h2>
-    <div id="memoryGrid" aria-owns="memories"></div>
-    <div style="margin-top:12px">
-      <strong style="font-size:14px">Quick add a memory</strong>
-      <textarea id="noteInput" placeholder="Write a memory — like 'Late-night walks and endless gossip'"></textarea>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <input id="titleInput" class="small" placeholder="Short title (e.g. Sleepless Nights)" />
-        <button class="btn" id="addBtn">Add</button>
-      </div>
-      <div class="hint">Tip: add emoji in text to make it lively. New memories appear at top.</div>
-    </div>
-  </div>
+    <script>
+        // —————————— Memories ——————————
+        const defaultMemories = [
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczMft9oj_HAjnCUFMXT_-oIgUILZZeqr-Y4KHVW-iPihc_7BCwBIlNDZ1e_iT4fQBghGt6CppQpowHJOrXPE4hzg1hhC5UMMmThOuLM22ZCYUHVYd4Xe1B5AF7dvkTtC7vO_902vI7pxRAyxhQO8z_WLzg=w878-h651-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
 
-  <div class="card pad" id="editorCard" style="display:none">
-    <strong>Bulk replace memories (JSON)</strong>
-    <p class="hint">Paste an array of memory objects: [{ "img":"URL","title":"...","text":"..." }, ...]</p>
-    <textarea id="jsonEditor" class="json-area" placeholder='[ { "img":"https://...", "title":"Late-night Walks","text":"..." } ]'></textarea>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button class="btn" id="applyJson">Apply</button>
-      <button class="btn ghost" id="resetBtn">Reset to defaults</button>
-    </div>
-  </div>
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczN_M62PLs2_x9EoxhD15NW9o4rkTc_yDf3Bi_XLl__-vzgG0tl96dshCtMTzPOxqWuZC5AT_5zZ91xC1imBRYmNly-fvJ2pagd_CC1BdIVb0ietYn0RJqSKp_1LAyaNsHe-9X4fuqBcrzT8kfF37uy3xA=w870-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczMlXkm8f4n1gE9bAUqF46zMOeaEJ9HYOcfuCimTXIqJOno6Wr5Bl0p6zUv5F8LTCqDnDMoJYf474YTPRWY7DANxxDpHvlwnUwMdb0KzcnMs7e9AcylFRGUx_d_wP09G_JvnVxQEkA6dM5XGyCwWfU57ew=w870-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczM5-LGKR3ayeYXWCA6A8RxiqC2o9QfFGlc6MtJ3sC9tESAZLg1IIBH-fqQLAcrM2VM8NZYdip-74fFt-xrCFRuYMDyPuj7hquDlepDjH2fw--oIUAXy_ycajNpyVQHn-c2tDP9XSbbxk74oWgemt_4-MA=w486-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczP8QHPNCapbDgNtlUeaVOnpq-rofjHhj4bPxymRPeTzHfSeaTux0nNijzvjtaPqQdAIJOgtGBTFOhgiI9w2Njb76fzlFZGG_ICsY2YvLzk04FQNbHNeMf_r94HQgsQ5NhnKfaohGKUEPA88AE3b6s_DsA=w484-h645-s-no-gm?authuser=0', title: 'নির্ঘুম রাত কাটানো', text: 'রাত জেগে গল্প আর হাসি।' },
 
-  <div class="footer">Made with care • Editable • Replace placeholders anytime</div>
-</div>
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczMeLIhYO6rIijbyMt5HL_45iDj5oxgf_Nes-5Uatw8j2lZVeql_4MYm_PYfg4Clpi2ccY1lDsW1XydF9jshifrlfEMYPXHAfbmeszkt_ulBbvXd_0BBi8nYd0ySoXPdDbBf6ypb3QjnC4s8zUjoLaaPMw=w363-h645-s-k-no-gm?authuser=0', title: 'মারামারি', text: 'কত আনন্দ।' },
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczNoFu9l8tDfKL_9phYT6jtLVMKOpOhT2QAg4TpAwMfXAS-BH1ZI6WyPeP2YPnZZ91dPWiGhXPPV5mQ2yyzA7FWZhH9DQekJQGnUbCNdaDbpzwtNFc97_lJvlFe0-WMrESxIEu5Nf9PmvbyvKHeRy2Qh4g=w486-h645-s-no-gm?authuser=0', title: 'টোকাই', text: 'ছোট্ট রসিকতা।' },
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczNm0eHPlw_AyHhtgfuw6nMxvygVOtcDo0VNFJkyFYWQ5uqinjDVrwW0dDmDv9UQBbkgodCv14TKa3P499Do_YOrJC_udHSM61BZjLQ-jRrqzXt5FfqqYj3OOhH0uh4xHmIz0GK0PGv386CnbQijdu5hjg=w860-h645-s-no-gm?authuser=0', title: 'আগেরবছর জন্মদিনে', text: 'সবাই একসাথে ছিলাম' },
 
-<script>
-// —————————— Balloon, Confetti & Memories Logic ——————————
-const LS='hb_shuvo_all_v3';
-const defaultMemories=[
-  { img:'https://via.placeholder.com/800x520?text=Late-night+Walks', title:'Late-night Walks', text:'Walking under the night sky, gossiping till dawn 🌙'},
-  { img:'https://via.placeholder.com/800x520?text=Funny+Fights', title:'Playful Scuffles', text:'We fight, I hit him once or twice, but he laughs 😆'},
-  { img:'https://via.placeholder.com/800x520?text=Helping+Hand', title:'Fixer-Up Bro', text:'He helps me through things I can’t solve 🙏'}
-];
-let state={memories:[],revealed:false}; 
-function loadState(){try{const r=localStorage.getItem(LS);if(r){state=JSON.parse(r);if(!state.memories||!state.memories.length)state.memories=defaultMemories.slice();}else{state.memories=defaultMemories.slice();}}catch(e){state.memories=defaultMemories.slice();} }
-function saveState(){localStorage.setItem(LS,JSON.stringify(state)); }
-function escapeHtml(s){return(s+'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-const grid=document.getElementById('memoryGrid');
-function createMemoryElement(mem,idx){const el=document.createElement('article');el.className='memory';el.setAttribute('data-idx',idx);el.innerHTML=`<img loading="lazy" src="${mem.img}" alt="${escapeHtml(mem.title)}"><div class="mem-body"><div class="mem-title">${escapeHtml(mem.title)}</div><div class="mem-text">${escapeHtml(mem.text)}</div><div class="mem-meta"><div class="reactions" aria-hidden="false"><div class="react" data-emoji="❤️">❤️ <span class="count">0</span></div><div class="react" data-emoji="😂">😂 <span class="count">0</span></div><div class="react" data-emoji="🔥">🔥 <span class="count">0</span></div></div><div style="font-size:12px;color:#999">Tap reactions</div></div></div>`; el.querySelectorAll('.react').forEach(btn=>{btn.addEventListener('click',e=>{e.stopPropagation();const emoji=btn.getAttribute('data-emoji');const counts=mem._reactions=mem._reactions||{'❤️':0,'😂':0,'🔥':0};counts[emoji]=(counts[emoji]||0)+1;btn.querySelector('.count').innerText=counts[emoji];saveState();btn.animate([{transform:'scale(1)'},{transform:'scale(1.15)'},{transform:'scale(1)'}],{duration:220});});}); const counts=mem._reactions||{};el.querySelectorAll('.react').forEach(btn=>{const emoji=btn.getAttribute('data-emoji');btn.querySelector('.count').innerText=counts[emoji]||0;}); return el; }
-function renderMemories(){grid.innerHTML='';state.memories.forEach((m,i)=>{const el=createMemoryElement(m,i);grid.appendChild(el);setTimeout(()=>el.classList.add('show'),80*i);});}
-document.getElementById('addBtn').addEventListener('click',()=>{const txt=document.getElementById('noteInput').value.trim();const title=document.getElementById('titleInput').value.trim()||'New Memory';if(!txt){alert('Write a memory first.');return;}const mem={img:'https://via.placeholder.com/800x520?text=New+Memory',title:title,text:txt,_reactions:{}};state.memories.unshift(mem);saveState();renderMemories();document.getElementById('noteInput').value='';document.getElementById('titleInput').value='';});
-loadState();renderMemories();
+        ];
+        let state = { memories: defaultMemories.slice(), revealed: false };
+        const grid = document.getElementById('memoryGrid');
 
-// Reveal Surprise
-document.getElementById('revealBtn').addEventListener('click',()=>{if(state.revealed)return;state.revealed=true;saveState();document.getElementById('revealText').innerText='🎁 Surprise! Check your desk drawer — something special awaits!';burstConfetti(120);for(let i=0;i<8;i++)setTimeout(()=>spawnBalloon(true),i*200);});
+        function createMemoryElement(mem) {
+            const el = document.createElement('article');
+            el.className = 'memory';
+            el.innerHTML = `<img src="${mem.img}" alt="${mem.title}"><div class="mem-body"><div class="mem-title">${mem.title}</div><div class="mem-text">${mem.text}</div></div>`;
+            return el;
+        }
 
-// Confetti
-const canvas=document.getElementById('confetti');const ctx=canvas.getContext('2d');let W=innerWidth,H=innerHeight;function resize(){W=innerWidth;H=innerHeight;canvas.width=W;canvas.height=H;}addEventListener('resize',()=>{resize();});resize();
-let confettiParticles=[];function initConfetti(n=60){confettiParticles=[];const base=Math.max(18,Math.floor(n*(innerWidth/420)));for(let i=0;i<base;i++){confettiParticles.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*5+3,dx:(Math.random()-0.5)*1.2,dy:Math.random()*1.2+0.3,c:['#ff4b2b','#ff9a9e','#ffcd3c','#6be6ff','#9a4dff'][Math.floor(Math.random()*5)],rot:Math.random()*360});}};initConfetti(60);
-function drawConfetti(){ctx.clearRect(0,0,W,H);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;p.dy+=0.003;p.rot+=2;if(p.y>H+20){p.y=-10;p.x=Math.random()*W;p.dy=Math.random()*1+0.3;}ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(0,0,p.r,p.r*0.6,0,0,Math.PI*2);ctx.fill();ctx.restore();});requestAnimationFrame(drawConfetti);}drawConfetti();
-function burstConfetti(amount=80){const extra=[];for(let i=0;i<amount;i++){extra.push({x:Math.random()*W,y:Math.random()*H*0.6,r:Math.random()*5+3,dx:(Math.random()-0.5)*4,dy:(Math.random()*3)+0.5,c:['#ff4b2b','#ff9a9e','#ffcd3c','#6be6ff','#9a4dff'][Math.floor(Math.random()*5)],rot:Math.random()*360});}confettiParticles=confettiParticles.concat(extra);setTimeout(()=>{confettiParticles.splice(-amount);},2700);}
-function spawnBalloon(fast=false){const b=document.createElement('div');b.className='balloon';const colors=['#ff7b6b','#ffd76b','#7be0ff','#cba0ff','#ff9ad8'];b.style.background=colors[Math.floor(Math.random()*colors.length)];b.style.left=(10+Math.random()*80)+'%';const duration=fast?(4+Math.random()*2):(9+Math.random()*6);b.style.transition=`transform ${duration}s linear, opacity 0.5s`;document.body.appendChild(b);requestAnimationFrame(()=>b.style.transform=`translateY(-${window.innerHeight+180}px)`);setTimeout(()=>{if(b.parentElement)b.remove();},(duration+0.6)*1000);}
-</script>
+        function renderMemories() {
+            grid.innerHTML = '';
+            state.memories.forEach((m, i) => {
+                const el = createMemoryElement(m);
+                grid.appendChild(el);
+                setTimeout(() => el.classList.add('show'), 80 * i);
+            });
+        }
+        renderMemories();
+
+        // —————————— Confetti ——————————
+        const canvas = document.getElementById('confetti'), ctx = canvas.getContext('2d');
+        let W = innerWidth, H = innerHeight;
+        function resize() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; }
+        window.addEventListener('resize', resize); resize();
+        let confettiParticles = [];
+        function initConfetti(n = 60) {
+            confettiParticles = [];
+            for (let i = 0; i < n; i++) {
+                confettiParticles.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 5 + 3, dx: (Math.random() - 0.5) * 1.2, dy: Math.random() * 1.2 + 0.3, c: ['#ff4b2b', '#ff9a9e', '#ffcd3c', '#6be6ff', '#9a4dff'][Math.floor(Math.random() * 5)], rot: Math.random() * 360 });
+            }
+        }
+        initConfetti(60);
+        function drawConfetti() {
+            ctx.clearRect(0, 0, W, H);
+            confettiParticles.forEach(p => {
+                p.x += p.dx; p.y += p.dy; p.dy += 0.003; p.rot += 2;
+                if (p.y > H + 20) { p.y = -10; p.x = Math.random() * W; p.dy = Math.random() * 1 + 0.3; }
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.fillStyle = p.c;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.r, p.r * 0.6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+            requestAnimationFrame(drawConfetti);
+        }
+        drawConfetti();
+
+        function burstConfetti(amount = 80) {
+            const extra = [];
+            for (let i = 0; i < amount; i++) {
+                extra.push({ x: Math.random() * W, y: Math.random() * H * 0.6, r: Math.random() * 5 + 3, dx: (Math.random() - 0.5) * 4, dy: (Math.random() * 3) + 0.5, c: ['#ff4b2b', '#ff9a9e', '#ffcd3c', '#6be6ff', '#9a4dff'][Math.floor(Math.random() * 5)], rot: Math.random() * 360 });
+            }
+            confettiParticles = confettiParticles.concat(extra);
+            setTimeout(() => { confettiParticles.splice(-amount); }, 2700);
+        }
+
+        // —————————— Balloons ——————————
+        function spawnBalloon(fast = false) {
+            const b = document.createElement('div');
+            b.className = 'balloon';
+            const colors = ['#ff7b6b', '#ffd76b', '#7be0ff', '#cba0ff', '#ff9ad8'];
+            b.style.background = colors[Math.floor(Math.random() * colors.length)];
+            b.style.left = (10 + Math.random() * 80) + '%';
+            b.style.setProperty('--size', Math.random() + 0.5);
+            b.style.opacity = 0.6 + Math.random() * 0.4;
+            document.body.appendChild(b);
+            requestAnimationFrame(() => {
+                b.style.transition = `transform ${fast ? (4 + Math.random() * 2) : (9 + Math.random() * 6)}s linear, bottom ${fast ? 4 : 9}s linear`;
+                b.style.transform = `translateY(-${window.innerHeight + 100}px)`;
+            });
+            setTimeout(() => { if (b.parentElement) b.remove(); }, 10000);
+        }
+
+        // —————————— Reveal Surprise ——————————
+
+        let balloonInterval;
+        document.getElementById('revealBtn').addEventListener('click', () => {
+            if (state.revealed) return;
+            state.revealed = true;
+            document.getElementById('revealText').innerText = "Check Your Bag - There's Something Special For You";
+            burstConfetti(120);
+            for (let i = 0; i < 8; i++) setTimeout(() => spawnBalloon(true), i * 300);
+            if (balloonInterval) return;
+            balloonInterval = setInterval(() => spawnBalloon(false), 1200);
+
+            // Play music
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log('Music autoplay blocked', e));
+        });
+        const letter = document.getElementById('birthdayLetter');
+        letter.addEventListener('click', () => {
+            letter.classList.add('show');
+        });
+        // const letter1 = document.getElementById('birthdayLetter1');
+        // letter1.addEventListener('click', () => {
+        //     letter1.classList.add('show');
+        // });
+
+        // —————————— Countdown ——————————
+        const targetDate = new Date("2025-11-02T00:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let distance = targetDate - now;
+            if (distance < 0) distance = 0;
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+
+    </script>
 </body>
+
 </html>
