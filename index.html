@@ -1,388 +1,248 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সিলেবাস</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday, Shuvo!</title>
+  <style>
+    :root{--blue:#5aa0e6;--orange:#ff8a33;--bg:#f7fbff;--card:#ffffff}
+    *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#eef7ff);color:#122;}
+    .container{max-width:980px;margin:28px auto;padding:18px}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
+    header.hero{background:linear-gradient(120deg,var(--blue),#9ad3ff);color:white;padding:36px;border-radius:14px;position:relative;overflow:hidden}
+    .hero-inner{display:flex;gap:20px;align-items:center}
+    .hero-photo{width:120px;height:120px;border-radius:14px;background:#fff3;border:6px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .hero-photo img{width:100%;height:100%;object-fit:cover}
+    h1{margin:0;font-size:28px}
+    p.lead{margin:6px 0 0;opacity:.95}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--orange);color:white;text-decoration:none;margin-top:12px}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #007bff;
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-        }
+    section.memories{margin-top:22px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(12,30,50,0.06);overflow:hidden}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card h4{margin:8px 0 6px;font-size:16px}
+    .card p{margin:0;color:#334}
 
-        header h1 {
-            font-size: 1.8rem;
-        }
+    section.quiz{margin-top:24px}
+    .quiz-question{margin-bottom:14px;background:linear-gradient(180deg,#fff,#fbfbff);padding:12px;border-radius:10px}
+    .quiz-question h3{margin:0 0 8px;font-size:15px}
+    .options{display:flex;flex-wrap:wrap;gap:8px}
+    .option{padding:8px 10px;border-radius:8px;border:1px solid #ddd;cursor:pointer}
 
-        .user-welcome {
-            font-size: 1rem;
-            margin-left: auto;
-        }
+    section.guestbook{margin-top:22px}
+    .guest-list{margin-top:12px}
+    .wish{padding:10px;border-radius:8px;background:#fff;margin-bottom:8px}
 
-        .save-task-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
+    footer{margin-top:26px;text-align:center;color:#445}
 
-        .save-task-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .small{font-size:13px;padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:white}
+    .hidden{display:none}
+    .confetti{position:absolute;pointer-events:none;}
 
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        .task-form {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .task-form input, .task-form textarea, .task-form button, .task-form select {
-            padding: 14px;
-            border-radius: 20px;
-            border: 2px solid #007bff;
-            font-size: 16px;
-        }
-
-        .task-form button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .task-form button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-        .summary-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .summary {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: left;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 15px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        td {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .delete-btn, .toggle-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            font-size: 14px;
-        }
-
-        .delete-btn {
-            background-color: #dc3545;
-        }
-
-        .delete-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-
-        .toggle-btn {
-            background-color: #17a2b8;
-        }
-
-        .toggle-btn:hover {
-            background-color: #138496;
-            transform: translateY(-2px);
-        }
-
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .modal-content button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    @media (max-width:560px){.hero-inner{flex-direction:column;align-items:flex-start}.hero-photo{width:96px;height:96px}}
+  </style>
 </head>
 <body>
-    <header>
-        <h1>সিলেবাস</h1>
-        <div id="user-name" class="user-welcome"></div>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="hero-photo" id="hero-photo">
+          <img id="heroImage" src="" alt="Shuvo photo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=200 height=200><rect width=200 height=200 fill=%22%23fff%22/><text x=50% y=50% dominant-baseline=middle text-anchor=middle font-size=18 fill=%22%23aaa%22>ADD IMAGE</text></svg>'" />
+        </div>
+        <div>
+          <h1 id="title">🎉 Happy Birthday, Shuvo!</h1>
+          <p class="lead" id="subtitle">From your roommate — Mostakim 💙</p>
+          <div class="controls">
+            <button class="btn" id="startBtn">Start the Memories 🎈</button>
+            <button class="small" id="editToggle">Edit mode</button>
+            <button class="small" id="uploadImage">Upload hero image</button>
+            <input id="heroUpload" type="file" accept="image/*" class="hidden" />
+          </div>
+        </div>
+      </div>
+      <canvas id="confetti" class="confetti"></canvas>
     </header>
 
-    <div class="container">
-        <div class="summary-container">
-            <div class="summary" id="task-summary">
-                <!-- The summary will be updated dynamically -->
-            </div>
-            <button id="toggle-form" class="save-task-btn">Add Task</button>
-        </div>
+    <section class="memories" id="memories">
+      <h2>Memories</h2>
+      <div class="grid" id="memGrid"></div>
+      <div style="margin-top:10px">
+        <button class="small" id="addMemoryBtn">Add Memory</button>
+        <button class="small" id="printBtn">Download memories (print)</button>
+      </div>
+    </section>
 
-        <div class="task-form" id="task-form">
-            <h2>যোগ করুন</h2>
-            <select id="subject">
-                <option value="">বিষয় নির্বাচন করুন</option>
-               
-                  <option value="উচ্চতর গণিত ২য় পত্র">উচ্চতর গণিত ১ম পত্র</option>
-                <option value="উচ্চতর গণিত ২য় পত্র">উচ্চতর গণিত ২য় পত্র</option>
-                <option value="রসায়ন ২য় পত্র">রসায়ন ১ম পত্র</option>
-                <option value="রসায়ন ২য় পত্র">রসায়ন ২য় পত্র</option>
-               <option value="পদার্থবিজ্ঞান ২য় পত্র">পদার্থবিজ্ঞান ১ম পত্র</option>
-                 <option value="পদার্থবিজ্ঞান ২য় পত্র">পদার্থবিজ্ঞান ২য় পত্র</option>
-                 <option value="প্রাণিবিজ্ঞান">প্রাণিবিজ্ঞান</option>
-                 <option value="প্রাণিবিজ্ঞান">উদ্ভিদবিজ্ঞান</option>
-            </select>
-            <input type="text" id="chapter" placeholder="অধ্যায়">
-            <input id="details" placeholder="টপিক"/>
-            <button id="save-task">সেভ করুন </button>
-        </div>
+    <section class="quiz" id="quiz">
+      <h2>How Well Do You Know Shuvo?</h2>
+      <div id="quizContainer"></div>
+      <div style="margin-top:8px">
+        <button class="small" id="addQuestion">Add question</button>
+        <button class="small" id="editJson">Edit quiz JSON</button>
+      </div>
+      <textarea id="quizJsonEditor" class="hidden" style="width:100%;height:140px;margin-top:8px;font-family:monospace"></textarea>
+    </section>
 
-        <div id="no-tasks-message" class="hidden">No tasks available. Please add a task!</div>
+    <section class="media" style="margin-top:22px">
+      <h2>A message for Shuvo</h2>
+      <p>Upload an MP3 or MP4 and it will play here.</p>
+      <input type="file" id="mediaUpload" accept="audio/*,video/*" />
+      <div id="mediaPlayer" style="margin-top:10px"></div>
+    </section>
 
-        <table id="task-table" class="hidden">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Chapter</th>
-                    <th>Chapter Details</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="task-list"></tbody>
-        </table>
-    </div>
+    <section class="guestbook" id="guestbook">
+      <h2>Guestbook</h2>
+      <form id="guestForm">
+        <input placeholder="Your name" id="guestName" style="padding:8px;border-radius:8px;border:1px solid #ddd;width:48%" required />
+        <input placeholder="Short wish (140 chars)" id="guestMsg" maxlength="140" style="padding:8px;border-radius:8px;border:1px solid #ddd;width:48%" required />
+        <div style="margin-top:8px"><button class="small" type="submit">Leave a wish</button></div>
+      </form>
+      <div class="guest-list" id="guestList"></div>
+    </section>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <p id="modal-message"></p>
-            <button onclick="closeModal()">Close</button>
-        </div>
-    </div>
+    <section class="surprise" style="margin-top:22px">
+      <h2>Surprise Reveal</h2>
+      <p>Click to reveal the secret message.</p>
+      <button class="btn" id="revealBtn">Click for your surprise 🎁</button>
+      <div id="revealText" style="margin-top:12px;font-weight:600"></div>
+    </section>
 
-    <script>
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    <footer>
+      Made with care by Mostakim — tailored for Talha Jobayer Shuvo.
+    </footer>
+  </div>
 
-        const userNameElement = document.getElementById('user-name');
-        const taskForm = document.getElementById('task-form');
-        const taskTable = document.getElementById('task-table');
-        const noTasksMessage = document.getElementById('no-tasks-message');
-        const taskList = document.getElementById('task-list');
-        const taskSummary = document.getElementById('task-summary');
-        const modal = document.getElementById('modal');
-        const modalMessage = document.getElementById('modal-message');
+<script>
+const DATA = {
+  title: '🎉 Happy Birthday, Shuvo!',
+  subtitle: 'From your roommate — Mostakim 💙',
+  heroImage: '',
+  memories: [
+    {id:1, img:'funny_fight.jpg', title:'Playful Scuffles', text:"We fight a lot — I hit him sometimes, and he just laughs it off. Always ends with a grin."},
+    {id:2, img:'late_night_walk.jpg', title:'Sleepless Nights', text:"Late-night walks, endless gossip, and no sleep at all… just stories, laughter, and peace."},
+    {id:3, img:'helping_hand.jpg', title:'Fixer-Up Bro', text:"He helps me through things I can’t solve alone — the calm to my chaos."},
+    {id:4, img:'room_gossip.jpg', title:'Talkative Nights', text:"Endless late talks where we solve nothing but feel better anyway."},
+    {id:5, img:'support_moment.jpg', title:'Small-wins Partner', text:"Every small problem I had, he helped me get past — roommate, teammate, friend."}
+  ],
+  quiz: [
+    {question: 'Who has a girlfriend?', options:['Mostakim','Shuvo'], answer: 'Shuvo'},
+    {question: "Whose habit is this?", options:['Mostakim','Shuvo'], answer: 'Shuvo'}
+  ],
+  surpriseText: 'Check your desk drawer... something is waiting for you. ❤️',
+};
 
-        function showModal(message) {
-            modalMessage.textContent = message;
-            modal.classList.add('active');
-        }
+// LocalStorage
+const LS_KEY='hb_shuvo_v1';
+function loadData(){const raw=localStorage.getItem(LS_KEY);if(raw){try{const parsed=JSON.parse(raw);Object.assign(DATA, parsed);}catch(e){console.warn(e)}}}
+function saveData(){localStorage.setItem(LS_KEY,JSON.stringify(DATA));}
+loadData();
 
-        function closeModal() {
-            modal.classList.remove('active');
-        }
+// Set initial
+document.getElementById('title').innerText = DATA.title;
+document.getElementById('subtitle').innerText = DATA.subtitle;
+if(DATA.heroImage) document.getElementById('heroImage').src=DATA.heroImage;
 
-        function askUserName() {
-            let username = localStorage.getItem('username');
-            if (!username) {
-                setTimeout(() => {
-                    username = prompt("What is your name?");
-                    if (username) {
-                        localStorage.setItem('username', username);
-                    } else {
-                        username = "User";
-                    }
-                    userNameElement.textContent = `Welcome, ${username}`;
-                }, 500);
-            } else {
-                userNameElement.textContent = `Welcome, ${username}`;
-            }
-        }
+// Confetti
+const confettiCanvas=document.getElementById('confetti');
+const ctx=confettiCanvas.getContext('2d');
+function resizeCanvas(){confettiCanvas.width=document.querySelector('header.hero').clientWidth;confettiCanvas.height=document.querySelector('header.hero').clientHeight}
+window.addEventListener('resize',resizeCanvas);resizeCanvas();
+function launchConfetti(){const pieces=[];for(let i=0;i<80;i++){pieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height*0.4,r:Math.random()*6+4,dx:(Math.random()-0.5)*3,dy:Math.random()*3+1,c:['#ff8a33','#ffd97a','#5aa0e6','#9ad3ff'][Math.floor(Math.random()*4)]});}let t=0;function frame(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);for(const p of pieces){p.x+=p.dx;p.y+=p.dy;p.dy+=0.03;ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(p.x,p.y,p.r,p.r*0.6,0,0,Math.PI*2);ctx.fill()}t++;if(t<250)requestAnimationFrame(frame);}frame();}
+document.addEventListener('DOMContentLoaded',()=>{launchConfetti();});
 
-        window.onload = () => {
-            askUserName();
-        };
+// Cloudinary admin upload
+const CLOUD_NAME = 'drlauhumz';       
+const UPLOAD_PRESET = 'itscon'; 
+const ADMIN_PASS = 'secret123'; 
 
-        function saveTasksToLocalStorage() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
+function requireAdmin(){const p=prompt('Admin code to upload:');return p===ADMIN_PASS;}
 
-        function updateSummary() {
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(task => task.status === 'Complete').length;
-            const remainingTasks = totalTasks - completedTasks;
+async function uploadToCloudinary(file){
+  const url=`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+  const fd=new FormData();
+  fd.append('file',file);
+  fd.append('upload_preset',UPLOAD_PRESET);
+  const res=await fetch(url,{method:'POST',body:fd});
+  if(!res.ok) throw new Error('Upload failed');
+  const data=await res.json();
+  return data.secure_url;
+}
 
-            taskSummary.innerText = `Total Tasks: ${totalTasks} | Completed: ${completedTasks} | Remaining: ${remainingTasks}`;
-        }
+// Hero upload handler
+document.getElementById('uploadImage').onclick=()=>document.getElementById('heroUpload').click();
+document.getElementById('heroUpload').onchange=async(e)=>{
+  if(!requireAdmin()){alert('Admin code incorrect');return;}
+  const f=e.target.files[0];if(!f) return;
+  try{const url=await uploadToCloudinary(f);DATA.heroImage=url;document.getElementById('heroImage').src=url;saveData();alert('Hero image uploaded!');}catch(err){alert('Upload error: '+err.message);}
+}
 
-        function showTasks() {
-            if (tasks.length === 0) {
-                taskTable.classList.add('hidden');
-                noTasksMessage.classList.remove('hidden');
-                taskSummary.innerText = ''; // Clear the summary when there are no tasks
-                return;
-            }
+// Memories render
+const memGrid=document.getElementById('memGrid');
+function renderMemories(){memGrid.innerHTML='';DATA.memories.forEach((m,idx)=>{
+  const el=document.createElement('div');el.className='card';
+  el.innerHTML=`<img src="${m.img||''}" alt="${m.title}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=400 height=240><rect width=400 height=240 fill=%22%23f7faff%22/><text x=50% y=50 dominant-baseline=middle text-anchor=middle font-size=16 fill=%22%23b0c6de%22>${encodeURIComponent(m.title)}</text></svg>'" />
+  <h4>${m.title}</h4><p>${m.text}</p>`;
+  const edit=document.createElement('div');edit.style.marginTop='8px';
+  const upBtn=document.createElement('button');upBtn.className='small';upBtn.innerText='Upload image';
+  upBtn.onclick=async()=>{
+    if(!requireAdmin()){alert('Admin code incorrect');return;}
+    const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async(ev)=>{
+      const file=ev.target.files[0];if(!file) return;
+      try{const url=await uploadToCloudinary(file);m.img=url;saveData();renderMemories();alert('Memory image uploaded!');}catch(err){alert('Upload error: '+err.message);}
+    };f.click();
+  };
+  const editBtn=document.createElement('button');editBtn.className='small';editBtn.innerText='Edit';
+  editBtn.onclick=()=>{
+    const newT=prompt('Edit title',m.title);if(newT!==null)m.title=newT;
+    const newTxt=prompt('Edit text',m.text);if(newTxt!==null)m.text=newTxt;
+    saveData();renderMemories();
+  };
+  const delBtn=document.createElement('button');delBtn.className='small';delBtn.innerText='Delete';
+  delBtn.onclick=()=>{if(confirm('Remove this memory?')){DATA.memories=DATA.memories.filter(x=>x.id!==m.id);saveData();renderMemories();}};
+  edit.appendChild(upBtn);edit.appendChild(editBtn);edit.appendChild(delBtn);
+  el.appendChild(edit);memGrid.appendChild(el);
+});}
+renderMemories();
+document.getElementById('addMemoryBtn').onclick=()=>{const id=Date.now();DATA.memories.push({id:id,img:'college_fun.jpg',title:'New memory',text:'Describe this moment...'});saveData();renderMemories();}
+document.getElementById('printBtn').onclick=()=>{window.print();}
 
-            taskTable.classList.remove('hidden');
-            noTasksMessage.classList.add('hidden');
-            taskList.innerHTML = '';
+// Quiz
+const quizContainer=document.getElementById('quizContainer');
+function renderQuiz(){quizContainer.innerHTML='';DATA.quiz.forEach((q,idx)=>{
+  const box=document.createElement('div');box.className='quiz-question';
+  box.innerHTML=`<h3>${idx+1}. ${q.question}</h3>`;
+  const opts=document.createElement('div');opts.className='options';
+  q.options.forEach(opt=>{const b=document.createElement('div');b.className='option';b.innerText=opt;
+    b.onclick=()=>{if(opt===q.answer){b.style.backgroundColor='#dff7e1';b.style.borderColor='#57b36b';alert('Correct!')}
+    else{b.style.backgroundColor='#ffe6e6';b.style.borderColor='#f05b5b';alert('Not quite.')}};opts.appendChild(b)});
+  const edit=document.createElement('div');edit.style.marginTop='8px';
+  const eBtn=document.createElement('button');eBtn.className='small';eBtn.innerText='Edit';
+  eBtn.onclick=()=>{const nq=prompt('Edit question',q.question);if(nq!==null)q.question=nq;const newOptions=prompt('Comma separated options',q.options.join(','));if(newOptions!==null)q.options=newOptions.split(',').map(s=>s.trim());const ans=prompt('Correct answer (exact text)',q.answer);if(ans!==null)q.answer=ans;saveData();renderQuiz();}
+  const dBtn=document.createElement('button');dBtn.className='small';dBtn.innerText='Delete';
+  dBtn.onclick=()=>{if(confirm('Delete question?')){DATA.quiz.splice(idx,1);saveData();renderQuiz();}}
+  edit.appendChild(eBtn);edit.appendChild(dBtn);
+  box.appendChild(opts);box.appendChild(edit);
+  quizContainer.appendChild(box);
+});}
+renderQuiz();
+document.getElementById('addQuestion').onclick=()=>{const q=prompt('Question text');if(!q) return;const ops=prompt('Comma separated options');const ans=prompt('Correct answer');DATA.quiz.push({question:q,options:ops?ops.split(',').map(s=>s.trim()):['A','B'],answer:ans||''});saveData();renderQuiz();}
+document.getElementById('editJson').onclick=()=>{const ta=document.getElementById('quizJsonEditor');ta.classList.toggle('hidden');ta.value=JSON.stringify(DATA.quiz,null,2);if(!ta.classList.contains('hidden'))ta.focus();}
+document.getElementById('quizJsonEditor').addEventListener('change',()=>{try{DATA.quiz=JSON.parse(document.getElementById('quizJsonEditor').value);saveData();renderQuiz();alert('Saved.')}catch(e){alert('Invalid JSON')}});
 
-            const sortedTasks = tasks.sort((a, b) => a.status === 'Complete' ? 1 : -1);
+// Media upload
+document.getElementById('mediaUpload').onchange=(e)=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);const cont=document.getElementById('mediaPlayer');cont.innerHTML='';if(f.type.startsWith('audio')){const a=document.createElement('audio');a.src=url;a.controls=true;cont.appendChild(a)}
+else{const v=document.createElement('video');v.src=url;v.controls=true;v.width=320;cont.appendChild(v);}}
 
-            sortedTasks.forEach((task, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.subject}</td>
-                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.chapter}</td>
-                    <td class="${task.status === 'Complete' ? 'completed' : ''}">${task.details}</td>
-                    <td>${task.status}</td>
-                    <td>
-                        <button class="toggle-btn" onclick="toggleTask(${index})">${task.status === 'Complete' ? 'Mark as Remaining' : 'Mark as Complete'}</button>
-                        <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
-                    </td>
-                `;
-                taskList.appendChild(row);
-            });
+// Guestbook
+const guestList=document.getElementById('guestList');
+function renderGuests(){guestList.innerHTML='';(DATA.guests||[]).forEach(g=>{const d=document.createElement('div');d.className='wish';d.innerHTML=`<b>${g.name}</b>: ${g.msg}`;guestList.appendChild(d);});}
+document.getElementById('guestForm').onsubmit=(e)=>{e.preventDefault();DATA.guests=DATA.guests||[];DATA.guests.push({name:document.getElementById('guestName').value,msg:document.getElementById('guestMsg').value});saveData();renderGuests();document.getElementById('guestForm').reset();}
+renderGuests();
 
-            updateSummary();
-        }
-
-        function toggleTask(index) {
-            tasks[index].status = tasks[index].status === 'Complete' ? 'Remaining' : 'Complete';
-            saveTasksToLocalStorage();
-            showTasks();
-        }
-
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            saveTasksToLocalStorage();
-            showTasks();
-            showModal('Task deleted successfully!');
-        }
-
-        document.getElementById('toggle-form').addEventListener('click', () => {
-            taskForm.style.display = taskForm.style.display === 'none' || taskForm.style.display === '' ? 'block' : 'none';
-        });
-
-        document.getElementById('save-task').addEventListener('click', () => {
-            const subject = document.getElementById('subject').value.trim();
-            const chapter = document.getElementById('chapter').value.trim();
-            const details = document.getElementById('details').value.trim();
-
-            if (!subject || !chapter || !details) {
-                showModal('Please fill in all fields!');
-                return;
-            }
-
-            tasks.unshift({ subject, chapter, details, status: 'Remaining' });
-            saveTasksToLocalStorage();
-            showTasks();
-            showModal('Task added successfully!');
-            taskForm.style.display = 'none';
-            document.getElementById('subject').value = '';
-            document.getElementById('chapter').value = '';
-            document.getElementById('details').value = '';
-        });
-
-        showTasks();
-    </script>
+// Reveal
+document.getElementById('revealBtn').onclick=()=>{document.getElementById('revealText').innerText=DATA.surpriseText;launchConfetti();}
+</script>
 </body>
 </html>
