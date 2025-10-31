@@ -445,7 +445,7 @@
         document.getElementById('revealBtn').addEventListener('click', () => {
             if (state.revealed) return;
             state.revealed = true;
-            document.getElementById('revealText').innerText = "Check Your Bag - There's Something Special For You";
+            document.getElementById('revealText').innerText = "There's Something Special For You";
             burstConfetti(120);
             for (let i = 0; i < 8; i++) setTimeout(() => spawnBalloon(true), i * 300);
             if (balloonInterval) return;
