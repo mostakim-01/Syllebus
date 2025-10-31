@@ -3,93 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎉 Happy Birthday Shuvo!</title>
+<title>Happy Birthday Shuvo!</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body{font-family:'Inter',sans-serif;background:#f7fbff;margin:0;padding:0;color:#122;}
-.container{max-width:600px;margin:0 auto;padding:16px;}
-header.card{background:#5aa0e6;color:white;padding:24px;border-radius:12px;text-align:center;margin-top:24px;}
-header.card h1{margin-bottom:8px;font-size:26px;}
-header.card p{opacity:.9;}
+body{margin:0;padding:0;font-family:'Inter',sans-serif;background:#f7fbff;color:#122;}
+.container{max-width:600px;margin:20px auto;padding:16px;}
+.card{background:#5aa0e6;color:white;border-radius:16px;padding:24px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.1);}
+.card h1{margin:0 0 8px;font-size:26px;}
+.card p{margin:0;opacity:0.9;}
 section{margin-top:24px;}
-.grid{display:grid;grid-template-columns:1fr;gap:16px;}
-.card{background:white;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:12px;}
-.card h4{margin-bottom:6px;}
-.card p{font-size:14px;color:#334;}
-.card button{margin-right:8px;margin-top:8px;padding:8px 12px;border:none;border-radius:8px;background:#ff8a33;color:white;cursor:pointer;font-weight:600;}
+.memory{background:white;padding:16px;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.memory img{width:100%;height:auto;border-radius:12px;margin-bottom:8px;}
+.memory h3{margin:8px 0 4px;}
+.memory p{margin:0;font-size:14px;color:#334;}
+button{margin-top:8px;padding:10px 16px;border:none;border-radius:8px;background:#ff8a33;color:white;font-weight:600;cursor:pointer;}
 textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;margin-top:6px;}
-@media(max-width:480px){header.card h1{font-size:22px;}}
+@media(max-width:480px){.card h1{font-size:22px;}}
 </style>
 </head>
 <body>
+
 <div class="container">
-  <header class="card">
+
+  <div class="card">
     <h1>🎉 Happy Birthday, Shuvo!</h1>
     <p>From your roommate — Mostakim 💙</p>
-  </header>
+    <button onclick="revealSurprise()">Reveal Your Surprise 🎁</button>
+  </div>
 
   <section id="memories">
     <h2>Our Memories</h2>
-    <div class="grid" id="memGrid"></div>
+
+    <div class="memory">
+      <img src="https://via.placeholder.com/500x300?text=Memory+1" alt="Memory 1">
+      <h3>Playful Fights</h3>
+      <p>We fight a lot — I hit him sometimes, he laughs it off.</p>
+    </div>
+
+    <div class="memory">
+      <img src="https://via.placeholder.com/500x300?text=Memory+2" alt="Memory 2">
+      <h3>Late-night Walks</h3>
+      <p>Endless walks and gossiping whole night, no sleep at all.</p>
+    </div>
+
+    <div class="memory">
+      <img src="https://via.placeholder.com/500x300?text=Memory+3" alt="Memory 3">
+      <h3>Helping Hand</h3>
+      <p>He helps me solve my problems — my calm in chaos.</p>
+    </div>
+
+    <div class="memory">
+      <img src="https://via.placeholder.com/500x300?text=Memory+4" alt="Memory 4">
+      <h3>Talkative Nights</h3>
+      <p>Late night talks, laughter, random stories.</p>
+    </div>
+
+    <div class="memory">
+      <img src="https://via.placeholder.com/500x300?text=Memory+5" alt="Memory 5">
+      <h3>Small Wins Partner</h3>
+      <p>Every little problem I had, he helped me through.</p>
+    </div>
+
   </section>
 
-  <section id="messageSection" style="margin-top:24px;">
+  <section id="messageSection">
     <h2>Send Me a Message</h2>
-    <textarea id="userMessage" rows="3" placeholder="Write something..."></textarea>
+    <textarea id="userMessage" rows="3" placeholder="Write your message..."></textarea>
     <button id="sendMessageBtn">Send Message</button>
   </section>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-// Initialize EmailJS
-(function(){emailjs.init("YOUR_USER_ID");})(); // <-- Replace YOUR_USER_ID
+emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS User ID
 
-// Memories Data
-const memories = [
-  {title:"Playful Fights", text:"We fight a lot — I hit him sometimes, he laughs it off."},
-  {title:"Late-night Walks", text:"Endless walks and gossiping whole night, no sleep at all."},
-  {title:"Helping Hand", text:"He helps me solve my problems — my calm in chaos."},
-  {title:"Talkative Nights", text:"Late night talks, laughter, random stories."},
-  {title:"Small Wins Partner", text:"Every little problem I had, he helped me through."}
-];
-
-// Render Memories
-const memGrid = document.getElementById('memGrid');
-memories.forEach((mem,index)=>{
-  const card = document.createElement('div');
-  card.className='card';
-  card.innerHTML=`
-    <h4>${mem.title}</h4>
-    <p id="memText${index}">${mem.text}</p>
-    <button onclick="alert('${mem.text.replace(/'/g,"\\'")}')">View Memory</button>
-    <button onclick="sendMemoryMessage('${mem.title}','${mem.text.replace(/'/g,"\\'")}')">Send Message</button>
-  `;
-  memGrid.appendChild(card);
-});
-
-// Function to send message via EmailJS
-function sendMemoryMessage(title,text){
-  const userMsg = prompt(`Write your message about "${title}"`,"");
-  if(!userMsg) return alert("Message cancelled.");
-  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // <-- Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID
-    to_name:"Mostakim",
-    from_name:"Shuvo",
-    message:`Memory: ${title}\n${text}\nMessage: ${userMsg}`
-  }).then(res=>{alert("Message sent! ❤️");}).catch(err=>{alert("Error sending message");console.error(err);});
+function revealSurprise() {
+  const answer = prompt("What are you expecting today, Shuvo?");
+  if(answer) {
+    emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // Replace with your service & template
+      to_name:"Mostakim",
+      from_name:"Shuvo",
+      message:"Shuvo's expectation: " + answer
+    }).then(res=>alert("Surprise sent! ❤️")).catch(err=>alert("Error sending surprise"));
+  }
 }
 
-// Send Message from textarea
-document.getElementById('sendMessageBtn').onclick=()=>{
-  const msg=document.getElementById('userMessage').value.trim();
+// Send message from textarea
+document.getElementById('sendMessageBtn').onclick = function() {
+  const msg = document.getElementById('userMessage').value.trim();
   if(!msg) return alert("Please type a message.");
-  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
+  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // Replace with your service & template
     to_name:"Mostakim",
     from_name:"Shuvo",
-    message:msg
-  }).then(res=>{alert("Message sent! ❤️");document.getElementById('userMessage').value='';})
-  .catch(err=>{alert("Error sending message");console.error(err);});
-}
+    message: msg
+  }).then(res=>{
+    alert("Message sent! ❤️");
+    document.getElementById('userMessage').value='';
+  }).catch(err=>{alert("Error sending message"); console.error(err);});
+};
 </script>
+
 </body>
 </html>
