@@ -1,432 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Happy Birthday — Shuvo 🎉</title>
-<meta name="theme-color" content="#ff9a9e" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎉 Happy Birthday Shuvo!</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg1:#ff9a9e; --bg2:#fad0c4; --accent:#ff4b2b; --muted:#666;
-    --card-bg:#ffffff; --card-radius:16px;
-  }
-  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial; -webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#111;}
-  .wrap{max-width:460px;margin:18px auto;padding:14px;}
-  .card{background:var(--card-bg);border-radius:var(--card-radius);box-shadow:0 10px 30px rgba(10,20,40,0.12);overflow:hidden;margin-bottom:16px;position:relative;}
-  .pad{padding:18px;}
-  h1{font-size:20px;margin:0 0 6px;color:var(--accent);letter-spacing:0.2px}
-  p.lead{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.4}
-  /* Surprise button */
-  .btn{display:inline-block;padding:10px 14px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none;border:none;font-weight:600;box-shadow:0 6px 16px rgba(255,75,43,0.18);cursor:pointer}
-  .btn.ghost{background:#fff;color:var(--accent);border:1px solid #f1b1a6}
-  .center{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  /* memory grid */
-  #memoryGrid{display:flex;flex-direction:column;gap:12px;padding:8px}
-  .memory{background:linear-gradient(180deg,#fff,#fff);border-radius:12px;overflow:hidden;display:block;transform-origin:center;transition:transform .28s ease,opacity .28s ease;opacity:0;transform:translateY(10px) scale(.995)}
-  .memory.show{opacity:1;transform:translateY(0) scale(1)}
-  .memory img{width:100%;height:200px;object-fit:cover;background:#f4f6f8;display:block}
-  .mem-body{padding:10px}
-  .mem-title{font-weight:700;color:var(--accent);font-size:15px;margin-bottom:6px}
-  .mem-text{font-size:14px;color:#333;line-height:1.35;margin-bottom:8px}
-  .mem-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .reactions{display:flex;gap:8px}
-  .react{padding:6px 8px;border-radius:999px;background:#f6f7fb;border:1px solid #eee;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px}
-  .react span.count{font-weight:700;color:#333}
-  /* add memory input */
-  textarea{width:100%;min-height:82px;padding:10px;border-radius:10px;border:1px solid #eee;font-size:14px;resize:vertical}
-  .flex{display:flex;gap:8px;align-items:center}
-  input.small{padding:8px;border-radius:10px;border:1px solid #eee;width:100%}
-  .hint{font-size:12px;color:var(--muted);margin-top:6px}
-  /* balloons */
-  .balloon{position:fixed;bottom:-140px;width:36px;height:46px;border-radius:50%;pointer-events:auto;display:flex;align-items:center;justify-content:center;z-index:40}
-  .balloon::after{content:'';position:absolute;left:50%;bottom:-22px;width:2px;height:26px;background:rgba(0,0,0,0.08);transform:translateX(-50%)}
-  /* confetti canvas sits above background but behind cards */
-  #confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:5}
-  /* json editor (for bulk image replace) */
-  .json-area{width:100%;height:120px;font-family:monospace;font-size:13px;padding:8px;border-radius:8px;border:1px dashed #e6e6e6;resize:vertical}
-  .footer{font-size:12px;color:var(--muted);text-align:center;padding:10px}
-  /* responsive tweaks */
-  @media (max-width:480px){
-    .wrap{padding:12px;margin:8px auto}
-    .mem-body{padding:8px}
-    .memory img{height:170px}
-  }
+:root{
+  --blue:#5aa0e6;
+  --orange:#ff8a33;
+  --bg:#f7fbff;
+  --card:#ffffff;
+}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0;}
+body{background:linear-gradient(180deg,var(--bg),#eef7ff);color:#122;}
+.container{max-width:980px;margin:0 auto;padding:16px;}
+header.hero{background:linear-gradient(120deg,var(--blue),#9ad3ff);color:white;padding:28px;border-radius:14px;position:relative;overflow:hidden;text-align:center;}
+header.hero h1{font-size:28px;margin-bottom:6px;}
+header.hero p{opacity:.9;margin-bottom:12px;}
+.btn{padding:10px 16px;border-radius:10px;background:var(--orange);color:white;text-decoration:none;cursor:pointer;border:none;font-weight:600;}
+section{margin-top:24px;}
+h2{margin-bottom:12px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(12,30,50,0.06);overflow:hidden;transition:transform .3s ease;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:6px;}
+.card h4{margin-bottom:4px;}
+.card p{color:#334;font-size:14px;}
+.confetti{position:absolute;pointer-events:none;top:0;left:0;width:100%;height:100%;z-index:10;}
+#notes{margin-top:16px;padding:12px;background:linear-gradient(180deg,#fff,#f0f8ff);border-radius:12px;line-height:1.5;font-size:14px;}
+@media(max-width:560px){header.hero h1{font-size:24px;}}
 </style>
 </head>
 <body>
-  <canvas id="confetti"></canvas>
+<div class="container">
+  <header class="hero">
+    <h1>🎉 Happy Birthday, Shuvo!</h1>
+    <p>From your roommate — Mostakim 💙</p>
+    <button class="btn" id="startBtn">Start the Memories 🎈</button>
+    <canvas class="confetti" id="confetti"></canvas>
+  </header>
 
-  <div class="wrap">
-    <!-- header card -->
-    <div class="card pad" role="banner" aria-label="Happy Birthday header">
-      <h1>🎉 Happy Birthday, Talha Jobayer Shuvo!</h1>
-      <p class="lead">From your roommate — Mostakim 💙<br>Two years of chaos, jokes, late-night walks, and steady help. This is for you.</p>
-      <div class="center">
-        <button class="btn" id="revealBtn">Reveal Surprise 🎁</button>
-        <button class="btn ghost" id="editToggle">Edit / Upload</button>
-      </div>
-      <p id="revealText" class="hint" style="margin-top:10px;font-weight:700"></p>
-    </div>
+  <!-- Memories -->
+  <section id="memories">
+    <h2>Our Memories</h2>
+    <div class="grid" id="memGrid"></div>
+  </section>
 
-    <!-- memories -->
-    <div class="card pad" aria-live="polite">
-      <h2 style="font-size:16px;margin:0 0 8px">Memories & Moments</h2>
-      <div id="memoryGrid" aria-owns="memories"></div>
+  <!-- Notes -->
+  <section id="notesSection">
+    <h2>Special Notes</h2>
+    <div id="notes"></div>
+  </section>
 
-      <div style="margin-top:12px">
-        <strong style="font-size:14px">Quick add a memory</strong>
-        <textarea id="noteInput" placeholder="Write a memory — like 'Late-night walks and endless gossip'"></textarea>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <input id="titleInput" class="small" placeholder="Short title (e.g. Sleepless Nights)" />
-          <button class="btn" id="addBtn">Add</button>
-        </div>
-        <div class="hint">Tip: add emoji in text to make it lively. New memories appear at top.</div>
-      </div>
-    </div>
+  <!-- Surprise -->
+  <section id="surpriseSection">
+    <h2>Surprise Reveal 🎁</h2>
+    <p>Click below to see your surprise!</p>
+    <button class="btn" id="revealBtn">Reveal Surprise</button>
+  </section>
 
-    <!-- admin / bulk replace -->
-    <div class="card pad" id="editorCard" style="display:none">
-      <strong>Bulk replace memories (JSON)</strong>
-      <p class="hint">Paste an array of memory objects: [{ "img":"URL","title":"...","text":"..." }, ...]</p>
-      <textarea id="jsonEditor" class="json-area" placeholder='[ { "img":"https://...", "title":"Late-night Walks","text":"..." } ]'></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn" id="applyJson">Apply</button>
-        <button class="btn ghost" id="resetBtn">Reset to defaults</button>
-      </div>
-    </div>
+  <footer style="margin-top:24px;text-align:center;color:#445;font-size:13px;">
+    Made with care by Mostakim — for Talha Jobayer Shuvo
+  </footer>
+</div>
 
-    <div class="footer">Made with care • Editable • Replace placeholders anytime</div>
-  </div>
-
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-/* ==========================
-   Data & placeholders
-   ========================== */
-const LS = 'hb_shuvo_all_v2';
-const defaultMemories = [
-  { img: 'https://via.placeholder.com/800x520?text=Late-night+Walks', title: 'Late-night Walks', text: 'Walking under the night sky, gossiping till dawn — our best kind of sleep delay. 🌙' },
-  { img: 'https://via.placeholder.com/800x520?text=Funny+Fights', title: 'Playful Scuffles', text: 'We fight, I hit him once or twice, but he always ends up laughing — pure brotherhood. 😆' },
-  { img: 'https://via.placeholder.com/800x520?text=Helping+Hand', title: 'Fixer-Up Bro', text: 'He helps me through things I can’t solve on my own — calm and steady. 🙏' },
-  { img: 'https://via.placeholder.com/800x520?text=Talkative+Nights', title: 'Talkative Nights', text: 'Nonstop talking, random songs, and the feeling that time stopped. 🎶' },
-  { img: 'https://via.placeholder.com/800x520?text=Small+Wins', title: 'Small Wins', text: 'Every small success we celebrated together — teammate for life. 🏆' }
+// Initialize EmailJS
+(function(){emailjs.init("YOUR_USER_ID");})(); // <-- Replace YOUR_USER_ID
+
+// Memories Data
+const memories = [
+  {title:"Playful Fights", text:"We fight a lot — I hit him sometimes, he laughs it off."},
+  {title:"Late-night Walks", text:"Endless walks and gossiping whole night, no sleep at all."},
+  {title:"Helping Hand", text:"He helps me solve my problems — my calm in chaos."},
+  {title:"Talkative Nights", text:"Late night talks, laughter, random stories."},
+  {title:"Small Wins Partner", text:"Every little problem I had, he helped me through."}
 ];
 
-let state = { memories: [], revealed: false };
+// Notes Data
+const notes = [
+  "Remember our first day as roommates? Time flies!",
+  "Your jokes always make the room lively.",
+  "Thanks for being patient with my nonsense.",
+  "No one can match our late-night adventures.",
+  "This year will be full of laughter and success!"
+];
 
-/* load from localStorage or defaults */
-function loadState(){
-  try{
-    const raw = localStorage.getItem(LS);
-    if(raw){ state = JSON.parse(raw); if(!state.memories || !state.memories.length) state.memories = defaultMemories.slice(); }
-    else { state.memories = defaultMemories.slice(); }
-  }catch(e){ state.memories = defaultMemories.slice(); }
-}
-function saveState(){ localStorage.setItem(LS, JSON.stringify(state)); }
+// Render Memories
+const memGrid = document.getElementById('memGrid');
+memories.forEach(mem=>{
+  const card = document.createElement('div');
+  card.className='card';
+  card.innerHTML=`<img src="https://picsum.photos/300/200?random=${Math.floor(Math.random()*1000)}" alt="${mem.title}"><h4>${mem.title}</h4><p>${mem.text}</p>`;
+  memGrid.appendChild(card);
+});
 
-/* ==========================
-   Render memories (with animation) 
-   ========================== */
-const grid = document.getElementById('memoryGrid');
+// Render Notes
+const notesDiv = document.getElementById('notes');
+notes.forEach(n=>{const p=document.createElement('p');p.innerText=n;notesDiv.appendChild(p);});
 
-function createMemoryElement(mem, idx){
-  const el = document.createElement('article');
-  el.className = 'memory';
-  el.setAttribute('data-idx', idx);
-  el.innerHTML = `
-    <img loading="lazy" src="${mem.img}" alt="${escapeHtml(mem.title)}">
-    <div class="mem-body">
-      <div class="mem-title">${escapeHtml(mem.title)}</div>
-      <div class="mem-text">${escapeHtml(mem.text)}</div>
-      <div class="mem-meta">
-        <div class="reactions" aria-hidden="false">
-          <div class="react" data-emoji="❤️">❤️ <span class="count">0</span></div>
-          <div class="react" data-emoji="😂">😂 <span class="count">0</span></div>
-          <div class="react" data-emoji="🔥">🔥 <span class="count">0</span></div>
-        </div>
-        <div style="font-size:12px;color:#999">Swipe to scroll</div>
-      </div>
-    </div>
-  `;
-  // Add reaction listeners and restore counts
-  el.querySelectorAll('.react').forEach(btn=>{
-    btn.addEventListener('click', e=>{
-      e.stopPropagation();
-      const emoji = btn.getAttribute('data-emoji');
-      const counts = mem._reactions = mem._reactions || { '❤️':0,'😂':0,'🔥':0 };
-      counts[emoji] = (counts[emoji]||0) + 1;
-      btn.querySelector('.count').innerText = counts[emoji];
-      saveState();
-      // small pop sound
-      playPop();
-      // small scale animation
-      btn.animate([{transform:'scale(1)'},{transform:'scale(1.15)'},{transform:'scale(1)'}],{duration:220});
-    });
-  });
-  // load stored counts
-  const counts = mem._reactions || {};
-  el.querySelectorAll('.react').forEach(btn=>{
-    const emoji = btn.getAttribute('data-emoji');
-    btn.querySelector('.count').innerText = counts[emoji] || 0;
-  });
-  // allow image replace on longpress (edit mode)
-  el.addEventListener('contextmenu', e=> e.preventDefault());
-  el.addEventListener('dblclick', async (e)=>{
-    if(!editMode) return;
-    const url = prompt('Replace image URL (full web URL):', mem.img || '');
-    if(url){ mem.img = url; saveState(); renderMemories(); }
-  });
-  return el;
+// Confetti
+const confettiCanvas=document.getElementById('confetti');
+const ctx=confettiCanvas.getContext('2d');
+function resizeCanvas(){confettiCanvas.width=confettiCanvas.clientWidth;confettiCanvas.height=confettiCanvas.clientHeight;}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+function launchConfetti(){
+  const pieces=[];for(let i=0;i<80;i++){pieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height*0.4,r:Math.random()*6+4,dx:(Math.random()-0.5)*1.5,dy:Math.random()*1.5+0.5,c:['#ff8a33','#ffd97a','#5aa0e6','#9ad3ff'][Math.floor(Math.random()*4)]});}
+  let t=0;
+  function frame(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    for(const p of pieces){p.x+=p.dx;p.y+=p.dy;p.dy+=0.02;ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(p.x,p.y,p.r,p.r*0.6,0,0,Math.PI*2);ctx.fill();}
+    t++;if(t<250)requestAnimationFrame(frame);}
+  frame();
 }
 
-function renderMemories(){
-  grid.innerHTML = '';
-  state.memories.forEach((m, i)=>{
-    const el = createMemoryElement(m, i);
-    grid.appendChild(el);
-    // stagger reveal
-    setTimeout(()=> el.classList.add('show'), 80 * i);
-  });
-}
+// Start button scroll
+document.getElementById('startBtn').onclick=()=>{document.getElementById('memories').scrollIntoView({behavior:'smooth'});launchConfetti();}
 
-/* ==========================
-   Add memory & input handling
-   ========================== */
-document.getElementById('addBtn').addEventListener('click', ()=>{
-  const txt = document.getElementById('noteInput').value.trim();
-  const title = document.getElementById('titleInput').value.trim() || 'New Memory';
-  if(!txt){ alert('Write a memory first.'); return; }
-  const mem = { img: 'https://via.placeholder.com/800x520?text=New+Memory', title: title, text: txt, _reactions: {} };
-  state.memories.unshift(mem);
-  saveState();
-  renderMemories();
-  document.getElementById('noteInput').value = '';
-  document.getElementById('titleInput').value = '';
-  showToast('Memory added!');
-});
+// Surprise reveal
+document.getElementById('revealBtn').onclick=()=>{
+  const msg=prompt("🎉 What are you expecting?");
+  if(msg){
+    alert("Your surprise is on its way! ❤️");
+    launchConfetti();
 
-/* ==========================
-   Surprise reveal
-   ========================== */
-document.getElementById('revealBtn').addEventListener('click', ()=>{
-  if(state.revealed){ return showToast('Already revealed 🎉'); }
-  state.revealed = true; saveState();
-  document.getElementById('revealText').innerText = '🎁 Surprise! Check your desk drawer — something special is waiting for you. ❤️';
-  // extra confetti + balloons
-  burstConfetti(120);
-  for(let i=0;i<8;i++) setTimeout(()=> spawnBalloon(true), i*200);
-  showToast('Surprise revealed!');
-});
-
-/* ==========================
-   Toast helper
-   ========================== */
-function showToast(msg){
-  const t = document.createElement('div');
-  t.textContent = msg;
-  Object.assign(t.style,{position:'fixed',left:'50%',transform:'translateX(-50%)',bottom:'20px',background:'#111',color:'#fff',padding:'8px 14px',borderRadius:'999px',zIndex:60,opacity:0});
-  document.body.appendChild(t);
-  t.animate([{opacity:0,transform:'translateX(-50%) translateY(8px)'},{opacity:1,transform:'translateX(-50%) translateY(0)'}],{duration:260,fill:'forwards'});
-  setTimeout(()=>{t.animate([{opacity:1},{opacity:0}],{duration:300}).onfinish=()=>t.remove();},1800);
-}
-
-/* ==========================
-   JSON editor (bulk replace)
-   ========================== */
-const editorCard = document.getElementById('editorCard');
-let editMode = false;
-document.getElementById('editToggle').addEventListener('click', ()=>{
-  editMode = !editMode;
-  editorCard.style.display = editMode ? 'block' : 'none';
-  showToast(editMode ? 'Edit mode ON (dblclick a memory to replace image)' : 'Edit mode OFF');
-});
-document.getElementById('applyJson').addEventListener('click', ()=>{
-  const raw = document.getElementById('jsonEditor').value.trim();
-  if(!raw){ alert('Paste JSON first'); return; }
-  try{
-    const arr = JSON.parse(raw);
-    if(!Array.isArray(arr)){ alert('JSON must be an array'); return; }
-    state.memories = arr.map(it => ({ img: it.img || 'https://via.placeholder.com/800x520?text=Image', title: it.title || 'Untitled', text: it.text || '' }));
-    saveState(); renderMemories(); showToast('Applied JSON');
-  }catch(e){ alert('Invalid JSON: ' + e.message); }
-});
-document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if(!confirm('Reset memories to default?')) return;
-  state.memories = defaultMemories.slice();
-  saveState(); renderMemories(); showToast('Reset done');
-});
-
-/* ==========================
-   Confetti (lightweight, mobile-optimized)
-   ========================== */
-const canvas = document.getElementById('confetti');
-const ctx = canvas.getContext('2d');
-let W = innerWidth, H = innerHeight;
-function resize(){ W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; }
-addEventListener('resize', () => { resize(); });
-resize();
-
-let confettiParticles = [];
-function initConfetti(n = 60){
-  confettiParticles = [];
-  const base = Math.max(18, Math.floor(n * (innerWidth/420)));
-  for(let i=0;i<base;i++){
-    confettiParticles.push({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: Math.random()*5 + 3,
-      dx: (Math.random()-0.5)*1.2,
-      dy: Math.random()*1.2 + 0.3,
-      c: ['#ff4b2b','#ff9a9e','#ffcd3c','#6be6ff','#9a4dff'][Math.floor(Math.random()*5)],
-      rot: Math.random()*360
-    });
+    // Send email via EmailJS
+    emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // <-- Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID
+      to_name:"Mostakim",
+      from_name:"Shuvo",
+      message:msg
+    }).then(response=>{console.log("Email sent!",response);}).catch(err=>{console.error("Error sending email",err);});
   }
 }
-initConfetti(60);
-
-let confettiAnim;
-function drawConfetti(){
-  ctx.clearRect(0,0,W,H);
-  confettiParticles.forEach(p=>{
-    p.x += p.dx;
-    p.y += p.dy;
-    p.dy += 0.003;
-    p.rot += 2;
-    if(p.y > H + 20){ p.y = -10; p.x = Math.random()*W; p.dy = Math.random()*1 + 0.3; }
-    // draw rotated ellipse
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(p.rot * Math.PI / 180);
-    ctx.fillStyle = p.c;
-    ctx.beginPath();
-    ctx.ellipse(0,0,p.r,p.r*0.6,0,0,Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-  });
-  confettiAnim = requestAnimationFrame(drawConfetti);
-}
-drawConfetti();
-
-/* burst function for surprise */
-function burstConfetti(amount=80){
-  // temporarily add more particles
-  const extra = [];
-  for(let i=0;i<amount;i++){
-    extra.push({
-      x: Math.random()*W,
-      y: Math.random()*H*0.6,
-      r: Math.random()*5 + 3,
-      dx: (Math.random()-0.5)*4,
-      dy: (Math.random()*3)+0.5,
-      c: ['#ff4b2b','#ff9a9e','#ffcd3c','#6be6ff','#9a4dff'][Math.floor(Math.random()*5)],
-      rot: Math.random()*360
-    });
-  }
-  confettiParticles = confettiParticles.concat(extra);
-  // remove extras after a few seconds
-  setTimeout(()=>{ confettiParticles.splice(-amount); }, 2700);
-}
-
-/* ==========================
-   Balloons with pop sound (WebAudio)
-   ========================== */
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playPop(){
-  // short pop using oscillator + noise
-  const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-  o.type='square'; o.frequency.setValueAtTime(800, audioCtx.currentTime);
-  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); o.stop(audioCtx.currentTime + 0.19);
-}
-
-function spawnBalloon(fast=false){
-  const b = document.createElement('div');
-  b.className = 'balloon';
-  const colors = ['#ff7b6b','#ffd76b','#7be0ff','#cba0ff','#ff9ad8'];
-  const c = colors[Math.floor(Math.random()*colors.length)];
-  b.style.background = c;
-  b.style.left = (10 + Math.random()*80) + '%';
-  const duration = fast ? (4 + Math.random()*2) : (9 + Math.random()*6);
-  b.style.transition = `transform ${duration}s linear, opacity 0.5s`;
-  document.body.appendChild(b);
-  // animate upward using transform
-  requestAnimationFrame(()=> b.style.transform = `translateY(-${window.innerHeight + 180}px)` );
-  // pop on click/tap
-  b.addEventListener('click', ()=> {
-    playPop();
-    b.style.transition = 'opacity .25s'; b.style.opacity = 0; setTimeout(()=>b.remove(),260);
-    // small burst confetti near click
-    burstConfetti(10);
-  }, {passive:true});
-  // remove after duration + buffer
-  setTimeout(()=> { if(b.parentElement) b.remove(); }, (duration+0.6)*1000);
-}
-
-/* spawn occasional balloons, but not too many on mobile */
-let balloonInterval = setInterval(()=> spawnBalloon(false), 1400);
-if(innerWidth < 420) {
-  clearInterval(balloonInterval);
-  balloonInterval = setInterval(()=> spawnBalloon(false), 2400);
-}
-
-/* ==========================
-   Lightweight performance tweaks
-   ========================== */
-// reduce animation frame rate on very slow devices (best-effort)
-let rafThrottle = 1;
-const perfTest = () => {
-  // simple test: if devicePixelRatio high and small memory, reduce particles
-  const dpr = window.devicePixelRatio || 1;
-  if(innerWidth < 420) {
-    initConfetti(40);
-  } else if(dpr > 1.5) {
-    initConfetti(50);
-  } else initConfetti(60);
-};
-perfTest();
-
-/* ==========================
-   Helpers & init
-   ========================== */
-function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function renderAll(){
-  renderMemories();
-}
-loadState();
-renderAll();
-
-/* ==========================
-   Bulk image demo: user will later replace
-   Pre-fill editor with JSON of current memories
-   ========================== */
-document.getElementById('jsonEditor').value = JSON.stringify(state.memories, null, 2);
-
-/* ==========================
-   Accessibility & keyboard shortcuts
-   - Press 'E' to toggle editor (for quick admin)
-   ========================== */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'e' || e.key === 'E'){ editMode = !editMode; editorCard.style.display = editMode ? 'block' : 'none'; showToast(editMode ? 'Edit mode on' : 'Edit mode off'); }
-});
-
-/* ==========================
-   Small pop on tap anywhere pops nearest balloon
-   (a little UX: tap background to pop an existing balloon quickly)
-   ========================== */
-document.body.addEventListener('touchstart', (ev)=>{
-  // prefer to not interfere with inputs
-  const tg = ev.target;
-  if(tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT' || tg.classList.contains('react')) return;
-  // pop first balloon found
-  const b = document.querySelector('.balloon');
-  if(b){ playPop(); b.remove(); burstConfetti(8); }
-}, {passive:true});
-
-/* End of script */
 </script>
 </body>
 </html>
