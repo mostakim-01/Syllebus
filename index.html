@@ -6,63 +6,38 @@
 <title>🎉 Happy Birthday Shuvo!</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --blue:#5aa0e6;
-  --orange:#ff8a33;
-  --bg:#f7fbff;
-  --card:#ffffff;
-}
-*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0;}
-body{background:linear-gradient(180deg,var(--bg),#eef7ff);color:#122;}
-.container{max-width:980px;margin:0 auto;padding:16px;}
-header.hero{background:linear-gradient(120deg,var(--blue),#9ad3ff);color:white;padding:28px;border-radius:14px;position:relative;overflow:hidden;text-align:center;}
-header.hero h1{font-size:28px;margin-bottom:6px;}
-header.hero p{opacity:.9;margin-bottom:12px;}
-.btn{padding:10px 16px;border-radius:10px;background:var(--orange);color:white;text-decoration:none;cursor:pointer;border:none;font-weight:600;}
+body{font-family:'Inter',sans-serif;background:#f7fbff;margin:0;padding:0;color:#122;}
+.container{max-width:600px;margin:0 auto;padding:16px;}
+header.card{background:#5aa0e6;color:white;padding:24px;border-radius:12px;text-align:center;margin-top:24px;}
+header.card h1{margin-bottom:8px;font-size:26px;}
+header.card p{opacity:.9;}
 section{margin-top:24px;}
-h2{margin-bottom:12px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
-.card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(12,30,50,0.06);overflow:hidden;transition:transform .3s ease;}
-.card:hover{transform:scale(1.05);}
-.card img{width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:6px;}
-.card h4{margin-bottom:4px;}
-.card p{color:#334;font-size:14px;}
-.confetti{position:absolute;pointer-events:none;top:0;left:0;width:100%;height:100%;z-index:10;}
-#notes{margin-top:16px;padding:12px;background:linear-gradient(180deg,#fff,#f0f8ff);border-radius:12px;line-height:1.5;font-size:14px;}
-@media(max-width:560px){header.hero h1{font-size:24px;}}
+.grid{display:grid;grid-template-columns:1fr;gap:16px;}
+.card{background:white;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:12px;}
+.card h4{margin-bottom:6px;}
+.card p{font-size:14px;color:#334;}
+.card button{margin-right:8px;margin-top:8px;padding:8px 12px;border:none;border-radius:8px;background:#ff8a33;color:white;cursor:pointer;font-weight:600;}
+textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;margin-top:6px;}
+@media(max-width:480px){header.card h1{font-size:22px;}}
 </style>
 </head>
 <body>
 <div class="container">
-  <header class="hero">
+  <header class="card">
     <h1>🎉 Happy Birthday, Shuvo!</h1>
     <p>From your roommate — Mostakim 💙</p>
-    <button class="btn" id="startBtn">Start the Memories 🎈</button>
-    <canvas class="confetti" id="confetti"></canvas>
   </header>
 
-  <!-- Memories -->
   <section id="memories">
     <h2>Our Memories</h2>
     <div class="grid" id="memGrid"></div>
   </section>
 
-  <!-- Notes -->
-  <section id="notesSection">
-    <h2>Special Notes</h2>
-    <div id="notes"></div>
+  <section id="messageSection" style="margin-top:24px;">
+    <h2>Send Me a Message</h2>
+    <textarea id="userMessage" rows="3" placeholder="Write something..."></textarea>
+    <button id="sendMessageBtn">Send Message</button>
   </section>
-
-  <!-- Surprise -->
-  <section id="surpriseSection">
-    <h2>Surprise Reveal 🎁</h2>
-    <p>Click below to see your surprise!</p>
-    <button class="btn" id="revealBtn">Reveal Surprise</button>
-  </section>
-
-  <footer style="margin-top:24px;text-align:center;color:#445;font-size:13px;">
-    Made with care by Mostakim — for Talha Jobayer Shuvo
-  </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -79,60 +54,41 @@ const memories = [
   {title:"Small Wins Partner", text:"Every little problem I had, he helped me through."}
 ];
 
-// Notes Data
-const notes = [
-  "Remember our first day as roommates? Time flies!",
-  "Your jokes always make the room lively.",
-  "Thanks for being patient with my nonsense.",
-  "No one can match our late-night adventures.",
-  "This year will be full of laughter and success!"
-];
-
 // Render Memories
 const memGrid = document.getElementById('memGrid');
-memories.forEach(mem=>{
+memories.forEach((mem,index)=>{
   const card = document.createElement('div');
   card.className='card';
-  card.innerHTML=`<img src="https://picsum.photos/300/200?random=${Math.floor(Math.random()*1000)}" alt="${mem.title}"><h4>${mem.title}</h4><p>${mem.text}</p>`;
+  card.innerHTML=`
+    <h4>${mem.title}</h4>
+    <p id="memText${index}">${mem.text}</p>
+    <button onclick="alert('${mem.text.replace(/'/g,"\\'")}')">View Memory</button>
+    <button onclick="sendMemoryMessage('${mem.title}','${mem.text.replace(/'/g,"\\'")}')">Send Message</button>
+  `;
   memGrid.appendChild(card);
 });
 
-// Render Notes
-const notesDiv = document.getElementById('notes');
-notes.forEach(n=>{const p=document.createElement('p');p.innerText=n;notesDiv.appendChild(p);});
-
-// Confetti
-const confettiCanvas=document.getElementById('confetti');
-const ctx=confettiCanvas.getContext('2d');
-function resizeCanvas(){confettiCanvas.width=confettiCanvas.clientWidth;confettiCanvas.height=confettiCanvas.clientHeight;}
-window.addEventListener('resize',resizeCanvas);
-resizeCanvas();
-function launchConfetti(){
-  const pieces=[];for(let i=0;i<80;i++){pieces.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height*0.4,r:Math.random()*6+4,dx:(Math.random()-0.5)*1.5,dy:Math.random()*1.5+0.5,c:['#ff8a33','#ffd97a','#5aa0e6','#9ad3ff'][Math.floor(Math.random()*4)]});}
-  let t=0;
-  function frame(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-    for(const p of pieces){p.x+=p.dx;p.y+=p.dy;p.dy+=0.02;ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(p.x,p.y,p.r,p.r*0.6,0,0,Math.PI*2);ctx.fill();}
-    t++;if(t<250)requestAnimationFrame(frame);}
-  frame();
+// Function to send message via EmailJS
+function sendMemoryMessage(title,text){
+  const userMsg = prompt(`Write your message about "${title}"`,"");
+  if(!userMsg) return alert("Message cancelled.");
+  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // <-- Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID
+    to_name:"Mostakim",
+    from_name:"Shuvo",
+    message:`Memory: ${title}\n${text}\nMessage: ${userMsg}`
+  }).then(res=>{alert("Message sent! ❤️");}).catch(err=>{alert("Error sending message");console.error(err);});
 }
 
-// Start button scroll
-document.getElementById('startBtn').onclick=()=>{document.getElementById('memories').scrollIntoView({behavior:'smooth'});launchConfetti();}
-
-// Surprise reveal
-document.getElementById('revealBtn').onclick=()=>{
-  const msg=prompt("🎉 What are you expecting?");
-  if(msg){
-    alert("Your surprise is on its way! ❤️");
-    launchConfetti();
-
-    // Send email via EmailJS
-    emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{ // <-- Replace YOUR_SERVICE_ID and YOUR_TEMPLATE_ID
-      to_name:"Mostakim",
-      from_name:"Shuvo",
-      message:msg
-    }).then(response=>{console.log("Email sent!",response);}).catch(err=>{console.error("Error sending email",err);});
-  }
+// Send Message from textarea
+document.getElementById('sendMessageBtn').onclick=()=>{
+  const msg=document.getElementById('userMessage').value.trim();
+  if(!msg) return alert("Please type a message.");
+  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
+    to_name:"Mostakim",
+    from_name:"Shuvo",
+    message:msg
+  }).then(res=>{alert("Message sent! ❤️");document.getElementById('userMessage').value='';})
+  .catch(err=>{alert("Error sending message");console.error(err);});
 }
 </script>
 </body>
