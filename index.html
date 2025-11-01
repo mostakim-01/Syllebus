@@ -25,6 +25,7 @@
             height: 100%;
             margin: 0;
             overflow-x: hidden;
+            transition: background 6s ease-in-out, color 6s ease-in-out;
         }
 
         body {
@@ -32,6 +33,13 @@
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: #111;
+        }
+
+        /* Night mode styles (applied after birthday ends) */
+        .night-mode {
+            background: linear-gradient(135deg, #0f1a3a 10%, #071028 60%);
+            background-size: cover;
+            color: #e8ecff;
         }
 
         @keyframes gradientBG {
@@ -65,6 +73,14 @@
             backdrop-filter: blur(8px);
         }
 
+        /* dark card variant for night mode */
+        .night-mode .card {
+            background: rgba(8, 12, 30, 0.7);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            color: #e8ecff;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
         .card:hover {
             transform: scale(1.02);
         }
@@ -80,11 +96,19 @@
             letter-spacing: 0.2px;
         }
 
+        .night-mode h1 {
+            color: #ffd9d6;
+        }
+
         p.lead {
             margin: 0 0 12px;
             color: #666;
             font-size: 14px;
             line-height: 1.4;
+        }
+
+        .night-mode p.lead {
+            color: #d6d9f8;
         }
 
         .btn {
@@ -144,6 +168,10 @@
             display: block;
         }
 
+        .night-mode .memory {
+            background: rgba(12, 18, 36, 0.6);
+            color: #e8ecff;
+        }
 
         .memory:hover {
             transform: scale(1.05);
@@ -161,11 +189,19 @@
             margin-bottom: 6px;
         }
 
+        .night-mode .mem-title {
+            color: #ffd6d0;
+        }
+
         .mem-text {
             font-size: 14px;
             color: #333;
             line-height: 1.35;
             margin-bottom: 8px;
+        }
+
+        .night-mode .mem-text {
+            color: #dbe0ff;
         }
 
         .balloon {
@@ -220,6 +256,10 @@
             padding: 10px;
         }
 
+        .night-mode .footer {
+            color: #cfd6ff;
+        }
+
         @media(max-width:480px) {
             .wrap {
                 padding: 12px;
@@ -235,7 +275,7 @@
             }
         }
 
-        .letter {
+        /* .letter {
             font-size: 16px;
             line-height: 1.6;
             color: #333;
@@ -257,14 +297,110 @@
 
         .letter:hover {
             transform: scale(1.01);
+        } */
+
+        /* Base letter style */
+        /* Letter style */
+        /* Letter style */
+        .letter {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            /* background blur */
+            filter: blur(6px);
+            /* initial blur for text */
+            transition: filter 0.6s ease, transform 0.6s ease, background 0.4s ease, color 0.4s ease;
         }
-        
+
+        /* Revealed state */
+        .letter.show {
+            filter: blur(0);
+            /* remove blur */
+            transform: scale(1.02);
+            cursor: default;
+        }
+
+        /* Hover effect */
+        .letter:hover {
+            transform: scale(1.01);
+        }
+
+        /* Dark mode */
+        .night-mode .letter {
+            background: rgba(8, 12, 30, 0.7);
+            color: #e8ecff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+        }
+
+
         .countdown span {
             padding: 8px 12px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
             margin: 0 4px;
             display: inline-block;
+        }
+
+        /* Stars */
+        .star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle at 40% 30%, #fff, rgba(255, 255, 255, 0.7));
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0.8);
+            z-index: 30;
+            animation: twinkle 2.5s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            40% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+
+            100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+        }
+
+        /* subtle drift for some stars */
+        .star.drift {
+            animation-name: twinkle, drift;
+            animation-duration: 2.8s, 8s;
+            animation-iteration-count: infinite, infinite;
+            animation-timing-function: ease-in-out, linear;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translateY(0) scale(0.9);
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+
+            100% {
+                transform: translateY(0) scale(0.9);
+            }
         }
     </style>
 </head>
@@ -290,23 +426,15 @@
             <h1 style="text-align:center;">🎉 শুভ জন্মদিন, শুভ </h1>
             <p class="lead" style="text-align:center;">যে মুহূর্তগুলো হারিয়ে যায় না, সেগুলোই আমাদের স্মৃতি।</p>
 
-            <!-- Reveal button centered -->
-            <!-- <div style="display:flex; justify-content:center; margin-top:12px;">
-        <button class="btn" id="revealBtn">Reveal Surprise 🎁</button>
-    </div> -->
-
-            <!-- <p id="revealText" class="hint" style="margin-top:10px;font-weight:700; text-align:center;"></p> -->
         </div>
         <div class="card pad" style="text-align:center; margin-bottom:16px;">
-            <h2 style="font-size:16px; margin:0 0 8px;">🎂 Your Birthday Will Finish In:</h2>
-            <div class="countdown" style="font-size:18px; font-weight:600; color:var(--accent);">
-                
+            <h2 id="title1" style="font-size:16px; margin:0 0 8px;">🎂 Your Birthday Will Finish In:</h2>
+            <div class="countdown" id="countdownBox" style="font-size:18px; font-weight:600; color:var(--accent);">
                 <span id="hours">00</span> ঘন্টা
                 <span id="minutes">00</span> মিনিট
                 <span id="seconds">00</span> সেকেন্ড
             </div>
         </div>
-
 
         <div class="card pad">
             <h2 style="font-size:16px;margin:0 0 8px">Memories & Moments</h2>
@@ -322,13 +450,10 @@
                 আমাদের জীবনের অমূল্য স্মৃতি হয়ে থাকবে।<br>
 
                 রাত জেগে গল্প করা, একসাথে ঘুরে বেড়ানো, কখনো ছোটখাটো ঝগড়া আর তার পর হেসে ফেলা—সবই মনে পড়ে।
-                সেই সব মুহূর্তগুলো এখন শুধু স্মৃতি নয়, এগুলো আমাদের কাছে একটি উষ্ণ অনুভূতি হিসেবে রয়ে গেছে।
-                যখনই মনে পড়বে, মনে হবে আমরা তখন সত্যিই সুখী ছিলাম।<br>
+                সেই সব মুহূর্তগুলো এখন শুধু স্মৃতি নয়, এগুলো আমাদের কাছে একটি উষ্ণ অনুভূতি হিসেবে রয়ে গেছে। <br>
 
                 আজ তোমার জন্মদিনে আমার একটাই আশা—তুমি হাসিমুখে থাকো, শান্তিতে থাকো, আর জীবনের অনেক বড় হও।<br>
-                                ইনশাআল্লাহ্ তুমি জীবনে ভালো কিছু করবে। আমার জন্যেও দোয়া করিও <br>
-
-
+                ইনশাআল্লাহ্ তুমি জীবনে ভালো কিছু করবে। আমার জন্যেও দোয়া করিও <br>
 
                 শুভ জন্মদিন! 🎉
             </p>
@@ -338,12 +463,6 @@
         </div>
         <p id="revealText" class="hint" style="margin-top:10px;font-weight:700; text-align:center;"></p>
 
-        <!-- <div class="card pad">
-            <p class="lead letter1" id="birthdayLetter1">
-                Sorry
-            </p>
-        </div> -->
-
         <div class="footer">Made by Mostakim</div>
     </div>
 
@@ -351,16 +470,13 @@
         // —————————— Memories ——————————
         const defaultMemories = [
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczMft9oj_HAjnCUFMXT_-oIgUILZZeqr-Y4KHVW-iPihc_7BCwBIlNDZ1e_iT4fQBghGt6CppQpowHJOrXPE4hzg1hhC5UMMmThOuLM22ZCYUHVYd4Xe1B5AF7dvkTtC7vO_902vI7pxRAyxhQO8z_WLzg=w878-h651-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
-
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczN_M62PLs2_x9EoxhD15NW9o4rkTc_yDf3Bi_XLl__-vzgG0tl96dshCtMTzPOxqWuZC5AT_5zZ91xC1imBRYmNly-fvJ2pagd_CC1BdIVb0ietYn0RJqSKp_1LAyaNsHe-9X4fuqBcrzT8kfF37uy3xA=w870-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczMlXkm8f4n1gE9bAUqF46zMOeaEJ9HYOcfuCimTXIqJOno6Wr5Bl0p6zUv5F8LTCqDnDMoJYf474YTPRWY7DANxxDpHvlwnUwMdb0KzcnMs7e9AcylFRGUx_d_wP09G_JvnVxQEkA6dM5XGyCwWfU57ew=w870-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczM5-LGKR3ayeYXWCA6A8RxiqC2o9QfFGlc6MtJ3sC9tESAZLg1IIBH-fqQLAcrM2VM8NZYdip-74fFt-xrCFRuYMDyPuj7hquDlepDjH2fw--oIUAXy_ycajNpyVQHn-c2tDP9XSbbxk74oWgemt_4-MA=w486-h645-s-no-gm?authuser=0', title: 'ঘুরে বেড়ানো', text: 'কি সুন্দর ছিলো দিনগুলো' },
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczP8QHPNCapbDgNtlUeaVOnpq-rofjHhj4bPxymRPeTzHfSeaTux0nNijzvjtaPqQdAIJOgtGBTFOhgiI9w2Njb76fzlFZGG_ICsY2YvLzk04FQNbHNeMf_r94HQgsQ5NhnKfaohGKUEPA88AE3b6s_DsA=w484-h645-s-no-gm?authuser=0', title: 'নির্ঘুম রাত কাটানো', text: 'রাত জেগে গল্প আর হাসি।' },
-
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczMeLIhYO6rIijbyMt5HL_45iDj5oxgf_Nes-5Uatw8j2lZVeql_4MYm_PYfg4Clpi2ccY1lDsW1XydF9jshifrlfEMYPXHAfbmeszkt_ulBbvXd_0BBi8nYd0ySoXPdDbBf6ypb3QjnC4s8zUjoLaaPMw=w363-h645-s-k-no-gm?authuser=0', title: 'মারামারি', text: 'কত আনন্দ।' },
             { img: 'https://lh3.googleusercontent.com/pw/AP1GczNoFu9l8tDfKL_9phYT6jtLVMKOpOhT2QAg4TpAwMfXAS-BH1ZI6WyPeP2YPnZZ91dPWiGhXPPV5mQ2yyzA7FWZhH9DQekJQGnUbCNdaDbpzwtNFc97_lJvlFe0-WMrESxIEu5Nf9PmvbyvKHeRy2Qh4g=w486-h645-s-no-gm?authuser=0', title: 'টোকাই', text: 'ছোট্ট রসিকতা।' },
-            { img: 'https://lh3.googleusercontent.com/pw/AP1GczNm0eHPlw_AyHhtgfuw6nMxvygVOtcDo0VNFJkyFYWQ5uqinjDVrwW0dDmDv9UQBbkgodCv14TKa3P499Do_YOrJC_udHSM61BZjLQ-jRrqzXt5FfqqYj3OOhH0uh4xHmIz0GK0PGv386CnbQijdu5hjg=w860-h645-s-no-gm?authuser=0', title: 'আগেরবছর জন্মদিনে', text: 'সবাই একসাথে ছিলাম' },
-
+            { img: 'https://lh3.googleusercontent.com/pw/AP1GczOzRVN2GqyFGdiR1x9-7rvqewcmwVgVP1f_1R3zZxHDX-qsIkbilbFiokPIGevOUryv362DOkuP3xDBctU3-XkrfzMcPV4iBabD-91gEq2W1t09O3-rS6NpbqilsVT7sONLXa2S_L407lNiAnEcCW-JlA=w860-h645-s-no-gm?authuser=0', title: 'আগেরবছর জন্মদিনে', text: 'সবাই একসাথে ছিলাম' },
         ];
         let state = { memories: defaultMemories.slice(), revealed: false };
         const grid = document.getElementById('memoryGrid');
@@ -387,7 +503,10 @@
         let W = innerWidth, H = innerHeight;
         function resize() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; }
         window.addEventListener('resize', resize); resize();
+
         let confettiParticles = [];
+        let confettiRunning = true;
+
         function initConfetti(n = 60) {
             confettiParticles = [];
             for (let i = 0; i < n; i++) {
@@ -395,8 +514,10 @@
             }
         }
         initConfetti(60);
+
         function drawConfetti() {
             ctx.clearRect(0, 0, W, H);
+            if (!confettiRunning) return;
             confettiParticles.forEach(p => {
                 p.x += p.dx; p.y += p.dy; p.dy += 0.003; p.rot += 2;
                 if (p.y > H + 20) { p.y = -10; p.x = Math.random() * W; p.dy = Math.random() * 1 + 0.3; }
@@ -422,6 +543,12 @@
             setTimeout(() => { confettiParticles.splice(-amount); }, 2700);
         }
 
+        function stopConfetti() {
+            confettiRunning = false;
+            confettiParticles = [];
+            ctx.clearRect(0, 0, W, H);
+        }
+
         // —————————— Balloons ——————————
         function spawnBalloon(fast = false) {
             const b = document.createElement('div');
@@ -429,7 +556,9 @@
             const colors = ['#ff7b6b', '#ffd76b', '#7be0ff', '#cba0ff', '#ff9ad8'];
             b.style.background = colors[Math.floor(Math.random() * colors.length)];
             b.style.left = (10 + Math.random() * 80) + '%';
-            b.style.setProperty('--size', Math.random() + 0.5);
+            const size = (Math.random() * 0.9) + 0.6;
+            b.style.width = `${36 * size}px`;
+            b.style.height = `${46 * size}px`;
             b.style.opacity = 0.6 + Math.random() * 0.4;
             document.body.appendChild(b);
             requestAnimationFrame(() => {
@@ -439,37 +568,46 @@
             setTimeout(() => { if (b.parentElement) b.remove(); }, 10000);
         }
 
-        // —————————— Reveal Surprise ——————————
-
         let balloonInterval;
+        function startBalloons() {
+            if (balloonInterval) return;
+            balloonInterval = setInterval(() => spawnBalloon(false), 1200);
+        }
+        function stopBalloons() {
+            if (balloonInterval) { clearInterval(balloonInterval); balloonInterval = null; }
+            document.querySelectorAll('.balloon').forEach(b => b.remove());
+        }
+
+        // —————————— Reveal Surprise ——————————
         document.getElementById('revealBtn').addEventListener('click', () => {
             if (state.revealed) return;
             state.revealed = true;
-            document.getElementById('revealText').innerText = "There's Something Special For You";
+            document.getElementById('revealText').innerText = "There's Something Special For You - Stay Tuned!";
             burstConfetti(120);
             for (let i = 0; i < 8; i++) setTimeout(() => spawnBalloon(true), i * 300);
-            if (balloonInterval) return;
-            balloonInterval = setInterval(() => spawnBalloon(false), 1200);
-
-            // Play music
+            startBalloons();
             const music = document.getElementById('bgMusic');
-            music.play().catch(e => console.log('Music autoplay blocked', e));
+            if (music) music.play().catch(e => console.log('Music autoplay blocked', e));
         });
+
+        // —————————— Letter Reveal ——————————
         const letter = document.getElementById('birthdayLetter');
         letter.addEventListener('click', () => {
             letter.classList.add('show');
+            letter.style.filter = 'blur(0)';
         });
-        // const letter1 = document.getElementById('birthdayLetter1');
-        // letter1.addEventListener('click', () => {
-        //     letter1.classList.add('show');
-        // });
 
-        // —————————— Countdown ——————————
+        // —————————— Countdown & Night Mode ——————————
         const targetDate = new Date("2025-11-02T00:00:00").getTime();
+        // const targetDate = new Date("2025-11-01T12:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
             let distance = targetDate - now;
-            if (distance < 0) distance = 0;
+            if (distance <= 0) {
+                showNightScene();
+                clearInterval(countdownTimer);
+                return;
+            }
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -477,11 +615,68 @@
             document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
             document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
         }
+        const countdownTimer = setInterval(updateCountdown, 1000);
         updateCountdown();
-        setInterval(updateCountdown, 1000);
+
+        // Check if already past target
+        (function checkInitialTime() {
+            if (new Date().getTime() >= targetDate) showNightScene();
+        })();
+
+        // —————————— Night Scene ——————————
+        // function fadeOutMusic() {
+        //     const music = document.getElementById("bgMusic");
+        //     if (!music) return;
+        //     if (typeof music.volume !== 'number') music.volume = 1;
+        //     const fade = setInterval(() => {
+        //         if (music.volume > 0.05) music.volume = Math.max(0, music.volume - 0.05);
+        //         else { music.pause(); music.volume = 1; clearInterval(fade); }
+        //     }, 300);
+        //     const music = document.getElementById('bgMusic');
+        //     if (music) music.play().catch(e => console.log('Music autoplay blocked', e));
+        // }
+
+        function showNightScene() {
+            if (document.body.classList.contains('night-mode')) return;
+            clearInterval(countdownTimer);
+            document.body.classList.add('night-mode');
+
+            const box = document.getElementById('countdownBox');
+            if (box) {
+                box.innerHTML = `<div style="font-size:18px; font-weight:700; color:inherit; line-height:1.5;">🎂 The day fades, but the memories stay forever.<br></div>`;
+            }
+
+            const title1 = document.getElementById('title1');
+            if (title1) {
+                title1.innerHTML = `<h2  id="title1" style="font-size:16px; margin:0 0 8px;"> </h2>`;
+            }
 
 
+            stopConfetti();
+            stopBalloons();
+
+            const starCount = 360;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement("div");
+                star.className = "star";
+                const top = Math.random() * 55;
+                star.style.left = Math.random() * 100 + "%";
+                star.style.top = top + "%";
+                const scale = 0.8 + Math.random() * 1.6;
+                star.style.width = Math.max(1, Math.floor(scale * 2)) + "px";
+                star.style.height = Math.max(1, Math.floor(scale * 2)) + "px";
+                star.style.animationDelay = (Math.random() * 2) + "s";
+                if (Math.random() > 0.6) star.classList.add('drift');
+                document.body.appendChild(star);
+                setTimeout(() => star.style.opacity = 1, 300 + Math.random() * 800);
+            }
+        }
+
+        window.showNightScene = showNightScene;
     </script>
+
+
+
 </body>
 
 </html>
